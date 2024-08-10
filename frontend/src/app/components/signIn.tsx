@@ -47,9 +47,14 @@ export function SignIn() {
     })
 
     const dataApi = await dataResponse.json()
+    const data = dataApi.data
+
+    if(data && !(data?.role === "ADMIN")){
+      toast.error("Unauthorized user")
+    }
 
     if(dataApi.success){
-      dispatch(setUserDetails(dataApi.data))
+      dispatch(setUserDetails(data))
     }
 }
 
@@ -77,7 +82,6 @@ useEffect(() => {
   })
 
   const dataApi = await dataResponse.json()
-  console.log(dataApi)
 
   if(dataApi.success){
       toast.success(dataApi.message)

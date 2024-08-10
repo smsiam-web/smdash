@@ -16,6 +16,9 @@ import {
 } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { File, PlusCircle } from "lucide-react";
+import OrderCard from "./order-card";
+import { PRODUCTS } from "src/app/components/config";
+import { OrdersTable } from "./order-table";
 
 const Orders = () => {
   return (
@@ -25,6 +28,9 @@ const Orders = () => {
           Orders
         </CardTitle>
       </CardHeader>
+      <CardContent>
+        <OrderCard />
+      </CardContent>
 
       <CardContent>
         <Tabs defaultValue="all">
@@ -55,6 +61,9 @@ const Orders = () => {
               </Button>
             </div>
           </div>
+          <TabsContent value="all">
+            <OrdersTable products={PRODUCTS} offset={0} totalProducts={10} />
+          </TabsContent>
         </Tabs>
       </CardContent>
     </Card>

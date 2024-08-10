@@ -22,7 +22,6 @@ export function User() {
   const user = useSelector(selectUser);
   const dispatch = useDispatch()
   const router = useRouter();
-  console.log(user);
 
   const fetchUserDetails = async()=>{
     const dataResponse = await fetch(SummaryApi.current_user.url,{

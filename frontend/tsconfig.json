@@ -51,6 +51,6 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/login/page.tsx", "lib/firebase.js", "src/app/redux/store.js", "src/app/App.tsx", "src/app/layout.tsx", "src/app/layouts/securityLayout.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/login/page.tsx", "lib/firebase.js", "src/app/redux/store.js", "src/app/App.tsx", "src/app/layout.tsx", "src/app/layouts/securityLayout.js", "utils/FormatCurrency.js"],
   "exclude": ["node_modules"]
 }
