@@ -102,3 +102,30 @@ input[type='search']::-moz-search-cancel-button {
 input[type='search']::-ms-clear {
   display: none;
 }
+body::-webkit-scrollbar {
+  width: 0px; /* Set scrollbar width */
+  height: 0px; /* Set scrollbar height for horizontal scroll */
+}
+body{
+  scrollbar-width: 0px;
+}
+
+/* Hide the spinners in WebKit (Chrome, Safari) */
+.hide-stepper::-webkit-outer-spin-button,
+.hide-stepper::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide the spinners in Firefox */
+.hide-stepper {
+  -moz-appearance: textfield;
+}
+
+/* Also remove the spinner arrows in Edge */
+.hide-stepper::-ms-clear,
+.hide-stepper::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}

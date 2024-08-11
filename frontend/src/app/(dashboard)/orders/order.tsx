@@ -25,25 +25,27 @@ import { AiOutlinePrinter } from "react-icons/ai";
 import { CiBarcode } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
+import moment from "moment";
 
-export function Orders({ product }: { product: any }) {
+export function Orders({ order }: { order: any }) {
+
   return (
     <TableRow>
-      <TableCell className="font-medium">#23205022</TableCell>
-      <TableCell className="hidden sm:table-cell">SFC(905416516)</TableCell>
-      <TableCell>Siam Chowdhury</TableCell>
-      <TableCell>01722166051</TableCell>
+      <TableCell className="font-medium">#{order?.orderId}</TableCell>
+      <TableCell className="hidden sm:table-cell">{order?.courier}</TableCell>
+      <TableCell>{order?.name}</TableCell>
+      <TableCell>{order?.contact}</TableCell>
       <TableCell>
-        <Badge className="capitalize">Home</Badge>
+        <Badge className="uppercase">{order?.deliveryType}</Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
         -{formatCurrencyLocale(400)}
       </TableCell>
       <TableCell className="hidden md:table-cell">
-        {formatCurrencyLocale(1230)}
+        {formatCurrencyLocale(order?.amount)}
       </TableCell>
       <TableCell>
-        <Badge>Pending</Badge>
+        <Badge color="gray" variant="secondary">{order?.status}</Badge>
       </TableCell>
       <TableCell>
         <Select>
@@ -64,10 +66,12 @@ export function Orders({ product }: { product: any }) {
           </SelectContent>
         </Select>
       </TableCell>
-      <TableCell>{product.availableAt.toLocaleDateString()}</TableCell>
-      <TableCell>Admin</TableCell>
+      <TableCell>{moment(order?.createdAt).format('MMM D, YYYY')}</TableCell>
+      <TableCell>{order?.createdBy}</TableCell>
       <TableCell>
-        <RiFileDownloadLine />
+        <div className="flex items-center justify-center cursor-pointer">
+          <RiFileDownloadLine />
+        </div>
       </TableCell>
       <TableCell>
         <DropdownMenu>

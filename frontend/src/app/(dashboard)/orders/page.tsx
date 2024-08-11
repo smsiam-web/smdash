@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Tabs,
   TabsContent,
@@ -17,10 +17,33 @@ import {
 import { Button } from "../../components/ui/button";
 import { File, PlusCircle } from "lucide-react";
 import OrderCard from "./order-card";
-import { PRODUCTS } from "src/app/components/config";
 import { OrdersTable } from "./order-table";
+import Link from "next/link";
+import SummaryApi from "common";
 
 const Orders = () => {
+  const [allOrder,setAllOrder] = useState([])
+  const [salesCounter,setSalesCounter] = useState([])
+
+  //fetch Order
+  // const fetchAllOrder = async() =>{
+  //   const response = await fetch(SummaryApi.allOrder.url)
+  //   const dataResponse = await response.json()
+  //   setAllOrder(dataResponse?.data || [])
+  // }
+
+  //fetch Sales Counter
+  const fetchSalesCounter = async() =>{
+    const response = await fetch(SummaryApi.salesCounter.url)
+    const dataResponse = await response.json()
+    setSalesCounter(dataResponse?.data || [])
+  }
+
+  useEffect(()=>{
+    // fetchAllOrder()
+    fetchSalesCounter()
+  },[])
+
   return (
     <Card>
       <CardHeader>
@@ -29,9 +52,15 @@ const Orders = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <OrderCard />
+        <OrderCard sales={!!salesCounter && salesCounter} />
       </CardContent>
 
+      <CardHeader>
+        <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-bold tracking-tight lg:text-4xl">
+          All Orders
+        </CardTitle>
+        <CardDescription>All order summery and actions.</CardDescription>
+      </CardHeader>
       <CardContent>
         <Tabs defaultValue="all">
           <div className="flex items-center">
@@ -53,16 +82,18 @@ const Orders = () => {
                   Export
                 </span>
               </Button>
-              <Button size="sm" className="h-8 gap-1">
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Add Order
-                </span>
-              </Button>
+              <Link href={"/orders/place-order"}>
+                <Button size="sm" className="h-8 gap-1">
+                  <PlusCircle className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Add Order
+                  </span>
+                </Button>
+              </Link>
             </div>
           </div>
           <TabsContent value="all">
-            <OrdersTable products={PRODUCTS} offset={0} totalProducts={10} />
+            <OrdersTable />
           </TabsContent>
         </Tabs>
       </CardContent>

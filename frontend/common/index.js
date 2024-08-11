@@ -1,6 +1,17 @@
 const backendDomin = "http://localhost:8080";
 
 const SummaryApi = {
+  //utils
+  salesCounter: {
+    url: `${backendDomin}/api/salescounter`,
+    method: "get",
+  },
+  orders: {
+    url: `${backendDomin}/api/orders`,
+    method: "get",
+  },
+
+  //User
   signUP: {
     url: `${backendDomin}/api/signup`,
     method: "post",
@@ -25,6 +36,18 @@ const SummaryApi = {
     url: `${backendDomin}/api/update-user`,
     method: "post",
   },
+
+  //Order
+  uploadOrder: {
+    url: `${backendDomin}/api/upload-order`,
+    method: "post",
+  },
+  allOrder: {
+    url: `${backendDomin}/api/get-order`,
+    method: "get",
+  },
+
+  //Product
   uploadProduct: {
     url: `${backendDomin}/api/upload-product`,
     method: "post",

@@ -41,7 +41,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const OrderCard = () => {
+const OrderCard = ({sales} : {sales: any} ) => {
+
   return (
     <Grid columns={{ initial: "1", sm: "3", md: "6" }} gap="5" width="auto">
       <Card>
@@ -49,7 +50,7 @@ const OrderCard = () => {
           <LuLayers className="h-12 w-12 text-green-400" />
           <h1>Today Orders</h1>
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl flex items-center">
-            {formatCurrencyLocale(4564)}
+            {formatCurrencyLocale(sales?.todaySales)}
           </CardTitle>
           <CardDescription className="font-normal">
             <span>Paid : 0.00  </span>
@@ -60,9 +61,9 @@ const OrderCard = () => {
       <Card>
         <CardHeader className="flex items-center">
           <LuLayers className="h-12 w-12 text-orange-400" />
-          <h1>Today Orders</h1>
+          <h1>Yesterday Orders</h1>
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl flex items-center">
-            {formatCurrencyLocale(5564)}
+            {formatCurrencyLocale(sales?.yesterdaySales)}
           </CardTitle>
           <CardDescription className="font-normal">
             <span>Paid : 0.00  </span>
@@ -76,7 +77,7 @@ const OrderCard = () => {
           <FiShoppingCart className="h-12 w-12 text-indigo-400" />
           <h1>This Month</h1>
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl">
-          {formatCurrencyLocale(465564)}
+          {formatCurrencyLocale(sales?.thisMonthSales)}
           </CardTitle>
           <CardDescription className="font-normal">
             <span>Paid : 0.00  </span>
@@ -89,7 +90,7 @@ const OrderCard = () => {
           <BsCashCoin className="h-12 w-12 text-purple-400" />
           <h1>All-Time Sales</h1>
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl">
-          {formatCurrencyLocale(465564)}
+          {formatCurrencyLocale(sales?.totalSales)}
           </CardTitle>
           <CardDescription className="font-normal">
             <span>Paid : 0.00  </span>
