@@ -9,17 +9,14 @@ import {
   Table,
 } from "../../components/ui/table";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "../../components/ui/button";
 import { Orders } from "./order";
 import SummaryApi from "common";
 
 export function OrdersTable() {
-  const [orderss, setOrders] = useState([]);
+  const [allOrder, setAllOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   let router = useRouter();
   let pathname = useSearchParams();
   let path = usePathname();
@@ -32,7 +29,7 @@ export function OrdersTable() {
       );
       const data = await response.json();
       pathname.size !== 1 && setCurrentPage(data.currentPage);
-      setOrders(data.orders);
+      setAllOrders(data.orders);
       setTotalPages(data.totalPages);
     } catch (error) {
       // setError(error);
@@ -95,7 +92,7 @@ export function OrdersTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orderss && orderss.map((order) => <Orders order={order} />)}
+          {allOrder && allOrder.map((order) => <Orders order={order} fetchOrders ={fetchOrders} />)}
         </TableBody>
       </Table>
 

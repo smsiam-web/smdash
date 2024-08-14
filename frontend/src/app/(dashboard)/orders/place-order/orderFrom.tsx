@@ -164,26 +164,26 @@ const OrderFrom = () => {
         toast.error(dataApi.message);
       }
     } else {
-      // const dataResponse = await fetch(SummaryApi.uploadOrder.url, {
-      //   method: SummaryApi.uploadOrder.method,
-      //   credentials: "include",
-      //   headers: {
-      //     "content-type": "application/json",
-      //   },
-      //   body: JSON.stringify(values),
-      // });
-      // const dataApi = await dataResponse.json();
+      const dataResponse = await fetch(SummaryApi.uploadOrder.url, {
+        method: SummaryApi.uploadOrder.method,
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const dataApi = await dataResponse.json();
 
-      // if (dataApi.success) {
-      //   toast.success(dataApi.message);
-      //   form.reset();
-      //   //   router.push('/')
-      //   //   await fetchUserDetails()
-      // }
+      if (dataApi.success) {
+        toast.success(dataApi.message);
+        form.reset();
+        //   router.push('/')
+        //   await fetchUserDetails()
+      }
 
-      // if (dataApi.error) {
-      //   toast.error(dataApi.message);
-      // }
+      if (dataApi.error) {
+        toast.error(dataApi.message);
+      }
     }
     setLoading(false);
   };

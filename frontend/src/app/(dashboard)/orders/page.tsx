@@ -43,8 +43,6 @@ const Orders = () => {
     setSalesCounter(dataResponse?.data || [])
   }
 
-  console.log(salesCounter)
-
   useEffect(()=>{
     // fetchAllOrder()
     fetchSalesCounter()

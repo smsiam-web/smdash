@@ -1,4 +1,4 @@
-import Image from "next/image";
+"use client"
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import {
@@ -26,20 +26,48 @@ import { CiBarcode } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import moment from "moment";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../../components/ui/alert-dialog";
 import Link from "next/link";
+import { useState } from "react";
+import SummaryApi from "common";
+import { toast } from "react-toastify";
 
-export function Orders({ order }: { order: any }) {
+export function Orders({ order, fetchOrders }: { order: any, fetchOrders: any }) {
+  const [singleOrder, setOrder] = useState({
+    deliveryType: "",
+      contact: "",
+      items: [],
+      name: "",
+      address: "",
+      amount: "",
+      courier: "",
+      status: "",
+      note: "",
+      createdBy: "",
+  });
+
+  //change Statue
+  const handleSelectChange = async (value: string) => {
+    const status = {status: value}
+    const data = { ...singleOrder, ...status };
+    const dataResponse = await fetch(SummaryApi.updateOrder.url,{
+      method: SummaryApi.updateOrder.method,
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const dataApi = await dataResponse.json();
+
+    if (dataApi.success) {
+      toast.success(dataApi.message);
+      fetchOrders()
+    }
+
+    if (dataApi.error) {
+      toast.error(dataApi.message);
+    }
+  };
 
   return (
     <>
@@ -58,13 +86,13 @@ export function Orders({ order }: { order: any }) {
           {formatCurrencyLocale(order?.amount)}
         </TableCell>
         <TableCell>
-          <Badge color="gray" variant="secondary">
+          <Badge color="gray" variant="secondary" className="capitalize">
             {order?.status}
           </Badge>
         </TableCell>
         <TableCell>
-          <Select>
-            <SelectTrigger className="w-[140px]">
+          <Select onValueChange={handleSelectChange} onOpenChange={() => setOrder(order)} defaultValue={order?.status}>
+            <SelectTrigger className="w-[140px]" >
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
             <SelectContent>
