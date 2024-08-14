@@ -6,24 +6,25 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
+} from "../../../../components/ui/card";
+import OrderFrom from "../../place-order/orderFrom";
 
-const SingleOrder = () => {
+const editOrder = () => {
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Single Order</CardTitle>
+          <CardTitle>Place Order</CardTitle>
           <CardDescription>
             Add your order and necessary information from here.
           </CardDescription>
         </CardHeader>
         <CardContent className="md:max-w-2xl max-w-[450px]">
-          {/* <OrderFrom /> */}
+          <OrderFrom />
         </CardContent>
       </Card>
     </>
   );
 };
 
-export default SingleOrder;
+export default editOrder;

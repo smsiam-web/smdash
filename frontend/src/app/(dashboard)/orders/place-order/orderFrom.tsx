@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,12 +25,14 @@ import { Input } from "src/app/components/ui/input";
 import { Button } from "@radix-ui/themes";
 import { Loader2 } from "lucide-react";
 import { Label } from "../../../components/ui/label";
+import DeepEqual from "../../../../../utils/helpers";
 import { RadioGroup, RadioGroupItem } from "../../../components/ui/radio-group";
 import { Textarea } from "src/app/components/ui/textarea";
 import SummaryApi from "common";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUser } from "src/app/redux/slices/userSlice";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 const phoneRegex = new RegExp(/^(?:\+?88)?01[3-9]\d{8}$/);
 // Define a schema for an array of objects
@@ -61,14 +63,12 @@ const formSchema = z.object({
       required_error: "Please select a courier to display.",
     })
     .default("SteadFast"),
-    status: z
+  status: z
     .string({
       required_error: "Please select a courier to display.",
     })
     .default("pending"),
-  note: z
-    .string()
-    .default("Note"),
+  note: z.string().default("Note"),
   createdBy: z
     .string()
     .min(3, {
@@ -79,7 +79,43 @@ const formSchema = z.object({
 
 const OrderFrom = () => {
   const [loading, setLoading] = useState(false);
-  const user = useSelector(selectUser)
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [order, setOrder] = useState({
+    deliveryType: "home",
+      contact: "",
+      items: [],
+      name: "",
+      address: "",
+      amount: "",
+      courier: "SteadFast",
+      status: "pending",
+      note: "Note",
+      createdBy: "",
+  });
+  const user = useSelector(selectUser);
+  const searchParams = useSearchParams();
+
+  const fullPath = searchParams.toString();
+  const path = fullPath.replace(/=/g, "");
+
+  //fetch Single Order
+  const fetchOrderByID = async (path: any) => {
+    setLoading(true);
+    const response = await fetch(SummaryApi.singleOrder.url, {
+      method: SummaryApi.singleOrder.method,
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        orderId: path,
+      }),
+    });
+    setLoading(false);
+    const dataReponse = await response.json();
+    form.reset(dataReponse?.data);
+    setOrder(dataReponse?.data);
+    setIsUpdate(true);
+  };
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -97,34 +133,57 @@ const OrderFrom = () => {
       courier: "SteadFast",
       status: "pending",
       note: "Note",
-      createdBy: `${user?.name}`
+      createdBy: `${user?.name}`,
     },
   });
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-   
-    const dataResponse = await fetch(SummaryApi.uploadOrder.url, {
-      method: SummaryApi.uploadOrder.method,
-      credentials: "include",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
 
-    const dataApi = await dataResponse.json();
+    if (isUpdate) {
+      const data = { ...order, ...values };
+      const dataResponse = await fetch(SummaryApi.updateOrder.url,{
+        method: SummaryApi.updateOrder.method,
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const dataApi = await dataResponse.json();
 
-    if (dataApi.success) {
-      toast.success(dataApi.message);
-      form.reset();
-      //   router.push('/')
-      //   await fetchUserDetails()
-    }
+      if (dataApi.success) {
+        toast.success(dataApi.message);
+        form.reset();
+        fetchOrderByID(path);
+        //   await fetchUserDetails()
+      }
 
-    if (dataApi.error) {
-      toast.error(dataApi.message);
+      if (dataApi.error) {
+        toast.error(dataApi.message);
+      }
+    } else {
+      // const dataResponse = await fetch(SummaryApi.uploadOrder.url, {
+      //   method: SummaryApi.uploadOrder.method,
+      //   credentials: "include",
+      //   headers: {
+      //     "content-type": "application/json",
+      //   },
+      //   body: JSON.stringify(values),
+      // });
+      // const dataApi = await dataResponse.json();
+
+      // if (dataApi.success) {
+      //   toast.success(dataApi.message);
+      //   form.reset();
+      //   //   router.push('/')
+      //   //   await fetchUserDetails()
+      // }
+
+      // if (dataApi.error) {
+      //   toast.error(dataApi.message);
+      // }
     }
     setLoading(false);
   };
@@ -132,6 +191,11 @@ const OrderFrom = () => {
   const handleReset = async () => {
     form.reset(); // Resets the form fields to their default values
   };
+
+  useEffect(() => {
+    fetchOrderByID(path);
+  }, [path]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
@@ -289,13 +353,17 @@ const OrderFrom = () => {
           type="button"
           onClick={handleReset}
           className="w-full !mt-6"
-          disabled={loading}
+          disabled={isUpdate}
         >
           Reset
         </Button>
-        <Button type="submit" className="w-full !mt-6" disabled={loading}>
+        <Button
+          type="submit"
+          className="w-full !mt-6 cursor-pointer"
+          disabled={loading}
+        >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Submit
+          {isUpdate ? "Update" : "Submit"}
         </Button>
       </form>
     </Form>

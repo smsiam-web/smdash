@@ -42,9 +42,17 @@ const SummaryApi = {
     url: `${backendDomin}/api/upload-order`,
     method: "post",
   },
+  updateOrder: {
+    url: `${backendDomin}/api/update-order`,
+    method: "post",
+  },
   allOrder: {
     url: `${backendDomin}/api/get-order`,
     method: "get",
+  },
+  singleOrder: {
+    url: `${backendDomin}/api/order-details`,
+    method: "post",
   },
 
   //Product

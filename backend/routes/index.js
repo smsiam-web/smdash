@@ -23,9 +23,11 @@ const deleteAddToCartProduct = require("../controller/user/deleteAddToCartProduc
 const searchProduct = require("../controller/product/searchProduct");
 const filterProductController = require("../controller/product/filterProduct");
 const UploadOrderController = require("../controller/order/uploadOrder");
+const UpdateOrderController = require("../controller/order/updateOrder");
 const getOrderController = require("../controller/order/getOrder");
 const salesCounterDetailsController = require("../controller/utils/getSalesCounter");
 const orderController = require("../helpers/orderPagination");
+const getSingleOrder = require("../controller/order/getSingleOrder");
 
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
@@ -38,8 +40,10 @@ router.post("/update-user", authToken, updateUser);
 
 //order
 router.post("/upload-order", authToken, UploadOrderController);
+router.post("/update-order", authToken, UpdateOrderController);
 router.get("/get-order", getOrderController);
 router.get("/orders", orderController);
+router.post("/order-details", getSingleOrder);
 
 //product
 router.post("/upload-product", authToken, UploadProductController);
