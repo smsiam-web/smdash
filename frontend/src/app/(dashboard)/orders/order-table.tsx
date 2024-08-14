@@ -8,6 +8,15 @@ import {
   TableBody,
   Table,
 } from "../../components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../../components/ui/pagination";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Orders } from "./order";
 import SummaryApi from "common";
@@ -43,17 +52,40 @@ export function OrdersTable() {
       const p = (path + pathname).split("=")[1];
       const offset = Number(p);
       fetchOrders(offset);
-      setCurrentPage(offset)
-    }else{
-      fetchOrders(1)
+      setCurrentPage(offset);
+    } else {
+      fetchOrders(1);
     }
-  },[pathname])
+  }, [pathname]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       const cpage = Number(currentPage);
       setCurrentPage(cpage + 1);
       router.push(`/orders?page=${cpage + 1}`, { scroll: false });
+    }
+  };
+
+  const elements: JSX.Element[] = [];
+  for (let i = 1; i <= totalPages; i++) {
+    elements.push(
+      <PaginationItem className="cursor-pointer">
+        {currentPage == i ? (
+          <PaginationLink isActive>{i}</PaginationLink>
+        ) : (
+          <PaginationLink onClick={() => handelDirectPage(i)}>
+            {i}
+          </PaginationLink>
+        )}
+      </PaginationItem>
+    );
+  }
+  const handelDirectPage = (i: number) => {
+    setCurrentPage(i);
+    if (i === 1) {
+      router.push(`/orders`, { scroll: false });
+    } else {
+      router.push(`/orders?page=${i}`, { scroll: false });
     }
   };
 
@@ -92,11 +124,32 @@ export function OrdersTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allOrder && allOrder.map((order) => <Orders order={order} fetchOrders ={fetchOrders} />)}
+          {allOrder &&
+            allOrder.map((order) => (
+              <Orders order={order} fetchOrders={fetchOrders} />
+            ))}
         </TableBody>
       </Table>
 
-      <div>
+      <Pagination className="mt-3">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              className="cursor-pointer"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            />
+          </PaginationItem>
+          {elements}
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext onClick={handleNextPage} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+      {/* <div>
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>
           Previous
         </button>
@@ -107,7 +160,7 @@ export function OrdersTable() {
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>
           Next
         </button>
-      </div>
+      </div> */}
     </>
   );
 }
