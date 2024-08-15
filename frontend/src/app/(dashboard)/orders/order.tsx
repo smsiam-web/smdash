@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import {
@@ -31,25 +31,34 @@ import { useState } from "react";
 import SummaryApi from "common";
 import { toast } from "react-toastify";
 
-export function Orders({ order, fetchOrders }: { order: any, fetchOrders: any }) {
+export function Orders({
+  order,
+  fetchOrders,
+}: {
+  order: any;
+  fetchOrders: any;
+}) {
   const [singleOrder, setOrder] = useState({
     deliveryType: "",
-      contact: "",
-      items: [],
-      name: "",
-      address: "",
-      amount: "",
-      courier: "",
-      status: "",
-      note: "",
-      createdBy: "",
+    contact: "",
+    items: [],
+    name: "",
+    address: "",
+    totalAmount: "",
+    paidAmount: "",
+    discount: "",
+    conditionAmount: "",
+    courier: "",
+    status: "",
+    note: "",
+    createdBy: "",
   });
 
   //change Statue
   const handleSelectChange = async (value: string) => {
-    const status = {status: value}
+    const status = { status: value };
     const data = { ...singleOrder, ...status };
-    const dataResponse = await fetch(SummaryApi.updateOrder.url,{
+    const dataResponse = await fetch(SummaryApi.updateOrder.url, {
       method: SummaryApi.updateOrder.method,
       credentials: "include",
       headers: {
@@ -61,7 +70,7 @@ export function Orders({ order, fetchOrders }: { order: any, fetchOrders: any })
 
     if (dataApi.success) {
       toast.success(dataApi.message);
-      fetchOrders()
+      fetchOrders();
     }
 
     if (dataApi.error) {
@@ -80,10 +89,13 @@ export function Orders({ order, fetchOrders }: { order: any, fetchOrders: any })
           <Badge className="uppercase">{order?.deliveryType}</Badge>
         </TableCell>
         <TableCell className="hidden md:table-cell">
-          -{formatCurrencyLocale(400)}
+          -{formatCurrencyLocale(200)}
         </TableCell>
         <TableCell className="hidden md:table-cell">
-          {formatCurrencyLocale(order?.amount)}
+          {formatCurrencyLocale(order?.paidAmount)}
+        </TableCell>
+        <TableCell className="hidden md:table-cell">
+          {formatCurrencyLocale(order?.conditionAmount)}
         </TableCell>
         <TableCell>
           <Badge color="gray" variant="secondary" className="capitalize">
@@ -91,8 +103,12 @@ export function Orders({ order, fetchOrders }: { order: any, fetchOrders: any })
           </Badge>
         </TableCell>
         <TableCell>
-          <Select onValueChange={handleSelectChange} onOpenChange={() => setOrder(order)} defaultValue={order?.status}>
-            <SelectTrigger className="w-[140px]" >
+          <Select
+            onValueChange={handleSelectChange}
+            onOpenChange={() => setOrder(order)}
+            defaultValue={order?.status}
+          >
+            <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
             <SelectContent>
@@ -138,6 +154,12 @@ export function Orders({ order, fetchOrders }: { order: any, fetchOrders: any })
                 <DropdownMenuItem className="cursor-pointer">
                   <FaRegEdit />
                   Edit
+                </DropdownMenuItem>
+              </Link>
+              <Link href={`/orders/id?${order?._id}`}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <FaRegEdit />
+                  Details
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuItem>

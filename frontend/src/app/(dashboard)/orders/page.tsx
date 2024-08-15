@@ -23,12 +23,7 @@ import SummaryApi from "common";
 
 const Orders = () => {
   const [allOrder,setAllOrder] = useState([])
-  const [salesCounter,setSalesCounter] = useState({
-    thisMonthSales: "00.00",
-    todaySales: "00.00",
-    totalSales: "00.00",
-    yesterdaySales: "00.00"
-  })
+  const [salesCounter,setSalesCounter] = useState(null)
   //fetch Order
   // const fetchAllOrder = async() =>{
   //   const response = await fetch(SummaryApi.allOrder.url)
@@ -40,8 +35,18 @@ const Orders = () => {
   const fetchSalesCounter = async() =>{
     const response = await fetch(SummaryApi.salesCounter.url)
     const dataResponse = await response.json()
-    setSalesCounter(dataResponse?.data || [])
+
+    console.log(dataResponse?.data)
+
+    setSalesCounter(dataResponse?.data || {
+      thisMonthSales: "00.00",
+      todaySales: "00.00",
+      totalSales: "00.00",
+      yesterdaySales: "00.00"
+    })
   }
+
+  console.log(salesCounter)
 
   useEffect(()=>{
     // fetchAllOrder()

@@ -8,7 +8,7 @@ const getSingleOrder = async (req, res) => {
 
     res.json({
       data: signleOrder,
-      message: "Ok",
+      message: "Data found.",
       success: true,
       error: false,
     });

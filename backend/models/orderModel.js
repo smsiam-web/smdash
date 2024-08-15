@@ -9,7 +9,10 @@ const orderSchema = mongoose.Schema(
       unique: true,
       index: true,
     },
-    amount: String,
+    totalAmount: String,
+    paidAmount: String,
+    discount: String,
+    conditionAmount: String,
     deliveryType: String,
     contact: String,
     items: [],
@@ -28,8 +31,13 @@ const orderSchema = mongoose.Schema(
 orderSchema.pre("save", async function (next) {
   const doc = this;
 
-  const str = doc.amount;
-  const orderTotal = Number(str);
+  const totalStr = doc.totalAmount;
+  const paidStr = doc.paidAmount;
+  const codStr = doc.conditionAmount;
+
+  const orderTotal = Number(totalStr);
+  const paidTotal = Number(paidStr);
+  const codTotal = Number(codStr);
 
   const currentDate = new Date();
   const startOfToday = new Date(
@@ -43,9 +51,21 @@ orderSchema.pre("save", async function (next) {
   if (!salesCounter) {
     await SalesCounter.create({
       totalSales: orderTotal,
+      totalPaid: paidTotal,
+      totalCod: codTotal,
+
       todaySales: orderTotal,
+      todayPaid: paidTotal,
+      todayCod: codTotal,
+
       yesterdaySales: 0,
+      yesterdayPaid: 0,
+      yesterdayCod: 0,
+
       thisMonthSales: orderTotal,
+      thisMonthPaid: paidTotal,
+      thisMonthCod: codTotal,
+
       lastUpdated: currentDate,
       createdAt: currentDate,
     });
@@ -53,22 +73,37 @@ orderSchema.pre("save", async function (next) {
     if (salesCounter.lastUpdated < startOfToday) {
       // If it's a new day, shift todaySales to yesterdaySales and reset todaySales
       salesCounter.yesterdaySales = salesCounter.todaySales;
+      salesCounter.yesterdayPaid = salesCounter.yesterdayPaid;
+      salesCounter.yesterdayCod = salesCounter.yesterdayCod;
+
       salesCounter.todaySales = orderTotal;
+      salesCounter.totalPaid = paidTotal;
+      salesCounter.totalCod = codTotal;
+
       salesCounter.lastUpdated = currentDate;
     } else {
       // If it's the same day, just increment todaySales
       salesCounter.todaySales += orderTotal;
+      salesCounter.todayPaid += paidTotal;
+      salesCounter.todayCod += codTotal;
     }
 
     // Check if the month has changed
     if (salesCounter?.lastUpdated.getMonth() !== currentDate.getMonth()) {
       salesCounter.thisMonthSales = orderTotal;
+      salesCounter.thisMonthPaid = paidTotal;
+      salesCounter.thisMonthCod = codTotal;
     } else {
       salesCounter.thisMonthSales += orderTotal;
+      salesCounter.thisMonthPaid += paidTotal;
+      salesCounter.thisMonthCod += codTotal;
     }
 
     // Increment totalSales regardless of the day
     salesCounter.totalSales += orderTotal;
+    salesCounter.totalPaid += paidTotal;
+    salesCounter.totalCod += codTotal;
+
     // Update the last updated timestamp
     salesCounter.lastUpdated = currentDate;
 

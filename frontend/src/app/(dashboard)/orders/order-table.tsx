@@ -111,7 +111,8 @@ export function OrdersTable() {
             <TableHead>Contact</TableHead>
             <TableHead>Shipping Type</TableHead>
             <TableHead>Discount</TableHead>
-            <TableHead>Amount</TableHead>
+            <TableHead>Paid</TableHead>
+            <TableHead>COD</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
             <TableHead>Created At</TableHead>
@@ -134,11 +135,7 @@ export function OrdersTable() {
       <Pagination className="mt-3">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious
-              className="cursor-pointer"
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-            />
+            <PaginationPrevious onClick={handlePreviousPage} />
           </PaginationItem>
           {elements}
           <PaginationItem>
@@ -149,18 +146,6 @@ export function OrdersTable() {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      {/* <div>
-        <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Previous
-        </button>
-        <span>
-          {" "}
-          Page {currentPage} of {totalPages}{" "}
-        </span>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-          Next
-        </button>
-      </div> */}
     </>
   );
 }

@@ -7,19 +7,20 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
+import OrderDetails from "./orderDetails";
 
 const SingleOrder = () => {
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Single Order</CardTitle>
+          <CardTitle>Order details</CardTitle>
           <CardDescription>
-            Add your order and necessary information from here.
+            Your order details and necessary information is here.
           </CardDescription>
         </CardHeader>
         <CardContent className="md:max-w-2xl max-w-[450px]">
-          {/* <OrderFrom /> */}
+          <OrderDetails />
         </CardContent>
       </Card>
     </>

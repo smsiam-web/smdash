@@ -25,14 +25,13 @@ import { Input } from "src/app/components/ui/input";
 import { Button } from "@radix-ui/themes";
 import { Loader2 } from "lucide-react";
 import { Label } from "../../../components/ui/label";
-import DeepEqual from "../../../../../utils/helpers";
 import { RadioGroup, RadioGroupItem } from "../../../components/ui/radio-group";
 import { Textarea } from "src/app/components/ui/textarea";
 import SummaryApi from "common";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUser } from "src/app/redux/slices/userSlice";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const phoneRegex = new RegExp(/^(?:\+?88)?01[3-9]\d{8}$/);
 // Define a schema for an array of objects
@@ -55,7 +54,19 @@ const formSchema = z.object({
     message: "Address is a required field",
   }),
   items: z.array(productSchema).min(1, "Must have at least one product"),
-  amount: z.string().min(0, {
+  totalAmount: z.string().min(0, {
+    message: "Password must be at least 8 characters.",
+  }),
+  paidAmount: z.string().min(0, {
+    message: "Password must be at least 8 characters.",
+  }),
+  discount: z.string().min(0, {
+    message: "Password must be at least 8 characters.",
+  }),
+  conditionAmount: z.string().min(0, {
+    message: "Password must be at least 8 characters.",
+  }),
+  shippingCost: z.string().min(0, {
     message: "Password must be at least 8 characters.",
   }),
   courier: z
@@ -82,15 +93,19 @@ const OrderFrom = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [order, setOrder] = useState({
     deliveryType: "home",
-      contact: "",
-      items: [],
-      name: "",
-      address: "",
-      amount: "",
-      courier: "SteadFast",
-      status: "pending",
-      note: "Note",
-      createdBy: "",
+    contact: "",
+    items: [],
+    name: "",
+    address: "",
+    totalAmount: "",
+    paidAmount: "",
+    discount: "",
+    conditionAmount: "",
+    shippingCost: "",
+    courier: "SteadFast",
+    status: "pending",
+    note: "Note",
+    createdBy: "",
   });
   const user = useSelector(selectUser);
   const searchParams = useSearchParams();
@@ -112,9 +127,12 @@ const OrderFrom = () => {
     });
     setLoading(false);
     const dataReponse = await response.json();
-    form.reset(dataReponse?.data);
-    setOrder(dataReponse?.data);
-    setIsUpdate(true);
+    if(dataReponse.success){
+      form.reset(dataReponse?.data);
+      setOrder(dataReponse?.data);
+      setIsUpdate(true);
+    }
+
   };
 
   // 1. Define your form.
@@ -129,7 +147,11 @@ const OrderFrom = () => {
       ],
       name: "",
       address: "",
-      amount: "",
+      totalAmount: "0",
+      paidAmount: "0",
+      discount: "",
+      conditionAmount: "0",
+      shippingCost: "0",
       courier: "SteadFast",
       status: "pending",
       note: "Note",
@@ -143,7 +165,7 @@ const OrderFrom = () => {
 
     if (isUpdate) {
       const data = { ...order, ...values };
-      const dataResponse = await fetch(SummaryApi.updateOrder.url,{
+      const dataResponse = await fetch(SummaryApi.updateOrder.url, {
         method: SummaryApi.updateOrder.method,
         credentials: "include",
         headers: {
@@ -285,16 +307,55 @@ const OrderFrom = () => {
             </FormItem>
           )}
         />
-
-        <FormField
+        <div className="grid pb-3 grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-6">
+          <FormField
+            control={form.control}
+            name="totalAmount"
+            render={({ field }) => (
+              <FormItem >
+                <Label>Total Amount</Label>
+                <FormControl>
+                  <Input
+                    placeholder="product price"
+                    className="hide-stepper"
+                    min="0"
+                    type="number"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="paidAmount"
+            render={({ field }) => (
+              <FormItem >
+                <Label>Paid Amount</Label>
+                <FormControl>
+                  <Input
+                    placeholder="paid amount"
+                    className="hide-stepper"
+                    min="0"
+                    type="number"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
           control={form.control}
-          name="amount"
+          name="shippingCost"
           render={({ field }) => (
-            <FormItem className="pb-3">
-              <Label>Amount</Label>
+            
+            <FormItem >
+              <Label>Shipping Cost</Label>
               <FormControl>
                 <Input
-                  placeholder="amount"
+                  placeholder="shipping cost"
                   className="hide-stepper"
                   min="0"
                   type="number"
@@ -305,6 +366,28 @@ const OrderFrom = () => {
             </FormItem>
           )}
         />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="conditionAmount"
+          render={({ field }) => (
+            <FormItem className="pb-3">
+              <Label>Condition Amount</Label>
+              <FormControl>
+                <Input
+                  placeholder="COD amount"
+                  className="hide-stepper"
+                  min="0"
+                  type="number"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
         <FormField
           control={form.control}
           name="courier"

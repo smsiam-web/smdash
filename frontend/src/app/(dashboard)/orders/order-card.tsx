@@ -53,8 +53,8 @@ const OrderCard = ({sales} : {sales: any} ) => {
             {formatCurrencyLocale(sales?.todaySales)}
           </CardTitle>
           <CardDescription className="font-normal">
-            <span>Paid : 0.00  </span>
-            <span>COD : 0.00</span>            
+            <span>Paid : {formatCurrencyLocale(sales?.todayPaid)}  </span>
+            <span>COD : {formatCurrencyLocale(sales?.todayCod)}</span>            
           </CardDescription>
         </CardHeader>
       </Card>
@@ -66,8 +66,8 @@ const OrderCard = ({sales} : {sales: any} ) => {
             {formatCurrencyLocale(sales?.yesterdaySales)}
           </CardTitle>
           <CardDescription className="font-normal">
-            <span>Paid : 0.00  </span>
-            <span>COD : 0.00</span>            
+            <span>Paid : {formatCurrencyLocale(sales?.yesterdayPaid)}  </span>
+            <span>COD : {formatCurrencyLocale(sales?.yesterdayCod)}</span>            
           </CardDescription>
         </CardHeader>
       </Card>
@@ -80,8 +80,8 @@ const OrderCard = ({sales} : {sales: any} ) => {
           {formatCurrencyLocale(sales?.thisMonthSales)}
           </CardTitle>
           <CardDescription className="font-normal">
-            <span>Paid : 0.00  </span>
-            <span>COD : 0.00</span>            
+            <span>Paid : {formatCurrencyLocale(sales?.thisMonthPaid)}  </span>
+            <span>COD : {formatCurrencyLocale(sales?.thisMonthCod)}</span>            
           </CardDescription>
         </CardHeader>
       </Card>
@@ -93,8 +93,8 @@ const OrderCard = ({sales} : {sales: any} ) => {
           {formatCurrencyLocale(sales?.totalSales)}
           </CardTitle>
           <CardDescription className="font-normal">
-            <span>Paid : 0.00  </span>
-            <span>COD : 0.00</span>            
+            <span>Paid : {formatCurrencyLocale(sales?.totalPaid)}  </span>
+            <span>COD : {formatCurrencyLocale(sales?.totalCod)}</span>            
           </CardDescription>
         </CardHeader>
       </Card>
