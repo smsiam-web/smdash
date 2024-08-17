@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import {
   Card,
@@ -9,21 +10,20 @@ import {
 } from "../../../components/ui/card";
 import OrderDetails from "./orderDetails";
 
+
 const SingleOrder = () => {
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Order details</CardTitle>
-          <CardDescription>
-            Your order details and necessary information is here.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="md:max-w-2xl max-w-[450px]">
-          <OrderDetails />
-        </CardContent>
-      </Card>
-    </>
+    <Card>
+      <CardHeader>
+        <CardTitle>Order details</CardTitle>
+        <CardDescription>
+          Your order details and necessary information is here.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="max-w-[1240px] max-h-[1754px]">
+        <OrderDetails />
+      </CardContent>
+    </Card>
   );
 };
 

@@ -31,7 +31,7 @@ import SummaryApi from "common";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUser } from "src/app/redux/slices/userSlice";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const phoneRegex = new RegExp(/^(?:\+?88)?01[3-9]\d{8}$/);
 // Define a schema for an array of objects
@@ -50,7 +50,7 @@ const formSchema = z.object({
   name: z.string().min(3, {
     message: "Name is a required field",
   }),
-  address: z.string().min(6, {
+  address: z.string().min(4, {
     message: "Address is a required field",
   }),
   items: z.array(productSchema).min(1, "Must have at least one product"),
@@ -108,6 +108,8 @@ const OrderFrom = () => {
     createdBy: "",
   });
   const user = useSelector(selectUser);
+
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const fullPath = searchParams.toString();
@@ -179,7 +181,6 @@ const OrderFrom = () => {
         toast.success(dataApi.message);
         form.reset();
         fetchOrderByID(path);
-        //   await fetchUserDetails()
       }
 
       if (dataApi.error) {
@@ -197,10 +198,9 @@ const OrderFrom = () => {
       const dataApi = await dataResponse.json();
 
       if (dataApi.success) {
-        toast.success(dataApi.message);
+        toast.success(dataApi?.message);
         form.reset();
-        //   router.push('/')
-        //   await fetchUserDetails()
+        router.push(`/orders/id?${dataApi?.data?._id}`)
       }
 
       if (dataApi.error) {

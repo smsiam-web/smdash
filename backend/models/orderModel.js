@@ -5,7 +5,7 @@ const SalesCounter = require("./salesCounter");
 const orderSchema = mongoose.Schema(
   {
     orderId: {
-      type: Number,
+      type: String,
       unique: true,
       index: true,
     },
@@ -13,6 +13,7 @@ const orderSchema = mongoose.Schema(
     paidAmount: String,
     discount: String,
     conditionAmount: String,
+    shippingCost: String,
     deliveryType: String,
     contact: String,
     items: [],
@@ -115,7 +116,7 @@ orderSchema.pre("save", async function (next) {
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
   );
-  doc.orderId = counter.seq;
+  doc.orderId = `RA0${counter.seq}`;
   next();
 });
 

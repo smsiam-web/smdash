@@ -19,7 +19,7 @@ import {
 } from "../../components/ui/select";
 import { MoreHorizontal } from "lucide-react";
 import { TableCell, TableRow } from "../../components/ui/table";
-import formatCurrencyLocale from "utils/FormatCurrency";
+import formatCurrencyLocale from "../../utils/FormatCurrency";
 import { RiFileDownloadLine } from "react-icons/ri";
 import { AiOutlinePrinter } from "react-icons/ai";
 import { CiBarcode } from "react-icons/ci";
@@ -81,6 +81,7 @@ export function Orders({
   return (
     <>
       <TableRow>
+        <TableCell>{moment(order?.createdAt).format("MMM D, YYYY")}</TableCell>
         <TableCell className="font-medium">#{order?.orderId}</TableCell>
         <TableCell className="hidden sm:table-cell">{order?.courier}</TableCell>
         <TableCell>{order?.name}</TableCell>
@@ -125,7 +126,7 @@ export function Orders({
             </SelectContent>
           </Select>
         </TableCell>
-        <TableCell>{moment(order?.createdAt).format("MMM D, YYYY")}</TableCell>
+
         <TableCell>{order?.createdBy}</TableCell>
         <TableCell>
           <div className="flex items-center justify-center cursor-pointer">

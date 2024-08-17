@@ -105,6 +105,7 @@ export function OrdersTable() {
       <Table>
         <TableHeader>
           <TableRow>
+          <TableHead>Created At</TableHead>
             <TableHead>ID</TableHead>
             <TableHead>Courier ID</TableHead>
             <TableHead>Name</TableHead>
@@ -115,7 +116,6 @@ export function OrdersTable() {
             <TableHead>COD</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
-            <TableHead>Created At</TableHead>
             <TableHead>Created by</TableHead>
             <TableHead>Invoice</TableHead>
             <TableHead>Actions</TableHead>
