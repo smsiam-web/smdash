@@ -19,8 +19,7 @@ import {
 import { LuLayers } from "react-icons/lu";
 import { FiShoppingCart } from "react-icons/fi";
 import { BsCashCoin } from "react-icons/bs";
-import { TbCurrencyTaka } from "react-icons/tb";
-import formatCurrencyLocale from "utils/FormatCurrency";
+import formatCurrencyLocale from "../../utils/FormatCurrency";
 
 const chartData = [
   { month: "January", ticket: 60 },

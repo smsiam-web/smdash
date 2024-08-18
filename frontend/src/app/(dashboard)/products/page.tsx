@@ -18,6 +18,7 @@ import { File, PlusCircle } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { ProductsTable } from "../products-table";
 import { PRODUCTS } from "../../components/config";
+import Link from "next/link";
 
 
 const Products = () => {
@@ -46,12 +47,14 @@ const Products = () => {
                   Export
                 </span>
               </Button>
+              <Link href={"/products/upload-product"}>
               <Button size="sm" className="h-8 gap-1">
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                   Add Product
                 </span>
               </Button>
+              </Link>
             </div>
           </div>
           <TabsContent value="all">
