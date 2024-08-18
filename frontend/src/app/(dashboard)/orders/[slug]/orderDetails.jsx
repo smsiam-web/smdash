@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "src/app/redux/slices/userSlice";
 import { useSearchParams } from "next/navigation";
 import moment from "moment";
+import Image from "next/image";
 const GenerateInvoice = dynamic(
   () => import("../../../utils/GenerateInvoice"),
   {
@@ -96,23 +97,29 @@ const OrderDetails = () => {
         />
         {/* <GenerateStick html={ref} /> */}
       </div>
-      <AspectRatio ratio={1 / 1.414} ref={ref} className="relative bg-white">
-        <div className="text-black">
-          <div>
+      <AspectRatio ratio={1 / 1.414} ref={ref} className="bg-white">
+        <div className="bg-white" ref={ref}>
+          <div className="bg-white text-black">
             <div>
-              <div className="flex flex-col">
-                <img
+              {/* image  */}
+              <div className="flex flex-col w-full gap-4">
+                <Image
                   src="/invoice/saba_head.jpg"
-                  alt=""
-                  className="w-3/5 px-10 py-5"
+                  width={450}
+                  height={450}
+                  alt="Picture of the author"
+                  className="p-4"
+          
                 />
-                <img
+                <Image
                   src="/invoice/saba_bar.png"
-                  alt=""
-                  className=" w-2/3 self-end"
+                  width={500}
+                  height={500}
+                  alt="Picture of the author"
+                  className="self-end"
                 />
               </div>
-              <div className="px-5 sm:px-10 h-auto font-mono">
+              <div className="px-4 sm:px-8 h-auto font-mono">
                 <div>
                   <div className="flex justify-between items-center pb-2 pt-1">
                     <div className=" sm:pt-1 flex justify-center items-center">
@@ -175,7 +182,7 @@ const OrderDetails = () => {
                       Order Details:
                     </h1>
                     <table className="w-full whitespace-nowrap table-auto border">
-                      <thead className="text-base font-semibold tracking-wide text-left  uppercase bg-slate-800 border-slate-800 border text-slate-50">
+                      <thead className="text-base font-semibold tracking-wide text-left  uppercase bg-zinc-800 border-slate-800 border text-slate-50">
                         <tr>
                           <th className="px-4 py-1 ">SL</th>
                           <th className="px-4 py-1 ">Item</th>
@@ -189,10 +196,12 @@ const OrderDetails = () => {
                           {order &&
                             order.items.map((item, i) => (
                               <tr
-                              className={`${(i + 1) % 2 == 0 && "bg-sub"} px-2`}
+                                className={`${
+                                  (i + 1) % 2 == 0 && "bg-sub"
+                                } px-2`}
                               >
                                 <td className="px-4 py-1 font-bold">
-                                  <span className="text-base">{1+i}</span>
+                                  <span className="text-base">{1 + i}</span>
                                 </td>
                                 <td className="px-4 py-1 font-medium">
                                   <span className="text-base">p name</span>
@@ -228,66 +237,45 @@ const OrderDetails = () => {
               <div className="flex justify-between w-full px-5 sm:px-10">
                 <div className="text-slate-500">
                   [<span className="text-base font-bold text-black">Note:</span>{" "}
-                  <span className="text-slate-500 font-semibold">{order?.note}]</span>
+                  <span className="text-slate-500 font-semibold">
+                    {order?.note}]
+                  </span>
                 </div>
                 <div className="flex flex-col w-2/3 sm:w-1/2 border-t-2 text-sm sm:text-xl lg:text-2xl">
                   <div className="flex w-full px-4 justify-between">
-                    <h1 className="font-mono font-medium">
-                      Sub-Total:
-                    </h1>
-                    <h1
-                      id="subTotal"
-                      className="text-title font-mono"
-                    >
+                    <h1 className="font-mono font-medium">Sub-Total:</h1>
+                    <h1 id="subTotal" className="text-title font-mono">
                       {order?.totalAmount}/-
                     </h1>
                   </div>
                   <div className="flex w-full px-4  justify-between">
-                    <h1 className="font-mono ">
-                      Delivery:{" "}
-                    </h1>
+                    <h1 className="font-mono ">Delivery: </h1>
                     <h1
                       id="shipping_type"
                       className="text-sm sm:text-lg md:text-xl text-title capitalize font-mono"
                     >
                       {order?.deliveryType}
                     </h1>
-                    <h1
-                      id="shipping_cost"
-                      className="text-title font-mono"
-                    >
+                    <h1 id="shipping_cost" className="text-title font-mono">
                       150/-
                     </h1>
                   </div>
                   <div className="flex w-full px-4 justify-between">
-                    <h1 className="font-mono ">
-                      Discount:{" "}
-                    </h1>
-                    <h1
-                      id="discount"
-                      className="text-title font-mono"
-                    >
+                    <h1 className="font-mono ">Discount: </h1>
+                    <h1 id="discount" className="text-title font-mono">
                       -{order?.discount || "0"}/-
                     </h1>
                   </div>
                   <div className="flex w-full px-4 justify-between">
                     <h1 className="font-mono ">Paid: </h1>
-                    <h1
-                      id="discount"
-                      className="text-title font-mono"
-                    >
+                    <h1 id="discount" className="text-title font-mono">
                       -{order?.paidAmount}/-
                     </h1>
                   </div>
                   <div className="flex w-full px-4 py-1 justify-between rounded-sm bg-emerald-100">
-                    <h1 className="font-mono font-bold">
-                      Total Due:{" "}
-                    </h1>
-                    <h1
-                      id="total"
-                      className="font-bold font-mono"
-                    >
-                     {order?.conditionAmount}/-
+                    <h1 className="font-mono font-bold">Total Due: </h1>
+                    <h1 id="total" className="font-bold font-mono">
+                      {order?.conditionAmount}/-
                     </h1>
                   </div>
                 </div>
