@@ -1,19 +1,30 @@
 import React from "react";
+// import { jsPDF } from "jspdf";
 import * as htmlToImage from "html-to-image";
 import { Button } from "../components/ui/button";
+import { HiOutlineDocumentDownload } from "react-icons/hi";
 
 const GenerateInvoice = ({ html, invoiceNo }) => {
+  // let invoiceNo = doc.splitTextToSize(
+  //   document.getElementById("invoiceNo").innerText,
+  //   300
+  // );
+
+  console.log(invoiceNo);
+
   const generateImage = async () => {
     htmlToImage.toJpeg(html.current, { quality: 1 }).then(function (dataUrl) {
       var link = document.createElement("a");
-      link.download = invoiceNo?.innerText;
+      link.download = invoiceNo;
       link.href = dataUrl;
       link.click();
     });
   };
   return (
     <div className="col-span-2 sm:col-span-1">
-      <Button onClick={generateImage}>Download Invoide</Button>
+      <Button onClick={generateImage} className="gap-1 sm:gap-2">
+        <HiOutlineDocumentDownload /> Download
+      </Button>
     </div>
   );
 };

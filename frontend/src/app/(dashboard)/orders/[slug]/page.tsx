@@ -20,9 +20,9 @@ const SingleOrder = () => {
           Your order details and necessary information is here.
         </CardDescription>
       </CardHeader>
-      <CardContent className="max-w-[1240px] max-h-[1754px]">
+      <div className="max-w-[1240px] max-h-[1754px]">
         <OrderDetails />
-      </CardContent>
+      </div>
     </Card>
   );
 };

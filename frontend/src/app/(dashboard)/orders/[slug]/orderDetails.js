@@ -12,6 +12,9 @@ import { selectUser } from "src/app/redux/slices/userSlice";
 import { useSearchParams } from "next/navigation";
 import moment from "moment";
 import Image from "next/image";
+import { Box } from "@radix-ui/themes";
+import { AiOutlinePrinter } from "react-icons/ai";
+import { MdAddCircleOutline } from "react-icons/md";
 const GenerateInvoice = dynamic(
   () => import("../../../utils/GenerateInvoice"),
   {
@@ -52,9 +55,9 @@ const OrderDetails = () => {
     options: {
       background: "#C1DEC6",
       displayValue: true,
-      width: 2,
-      height: 45,
-      fontSize: 20,
+      width: 4,
+      height: 90,
+      fontSize: 30,
     },
   });
 
@@ -85,53 +88,65 @@ const OrderDetails = () => {
 
   return (
     <>
-      <div className="flex items-center justify-end gap-4 pb-4">
-        <Link href={"/orders/place-order"}>
-          <Button>Place order</Button>
-        </Link>
-        <GenerateInvoice html={ref} onClick={() => jsxToPng(null)} />
-        <ReactToPrint
-          bodyClass="print-agreement"
-          content={() => ref.current}
-          trigger={() => <Button>Print Invoice</Button>}
-        />
+      <div className="flex gap-2 justify-end pb-4 pr-5">
+        <Box>
+          <Link href={"/orders/place-order"}>
+            <Button className="gap-1 sm:gap-2">
+              <MdAddCircleOutline />
+              Place order
+            </Button>
+          </Link>
+        </Box>
+        <Box>
+          <GenerateInvoice
+            html={ref}
+            invoiceNo={order?.orderId}
+            onClick={() => jsxToPng(null)}
+          />
+        </Box>
+        <Box>
+          <ReactToPrint
+            bodyClass="print-agreement"
+            content={() => ref.current}
+            trigger={() => (
+              <Button className="gap-1 sm:gap2">
+                <AiOutlinePrinter />
+                Print
+              </Button>
+            )}
+          />
+        </Box>
         {/* <GenerateStick html={ref} /> */}
       </div>
-      <AspectRatio ratio={1 / 1.414} ref={ref} className="bg-white">
+      <AspectRatio ratio={1 / 1.414} ref={ref} className="bg-white border">
         <div className="bg-white" ref={ref}>
           <div className="bg-white text-black">
             <div>
               {/* image  */}
-              <div className="flex flex-col w-full gap-4">
-                <Image
-                  src="/invoice/saba_head.jpg"
-                  width={450}
-                  height={450}
-                  alt="Picture of the author"
-                  className="p-4"
-          
+              <div className="flex flex-col w-full gap-2">
+                <img
+                  src="/invoice/company_header.png"
+                  alt=""
+                  className="w-3/5 pl-2 pt-2 sm:pl-8 sm:pt-4 sm:pb-2"
                 />
-                <Image
-                  src="/invoice/saba_bar.png"
-                  width={500}
-                  height={500}
-                  alt="Picture of the author"
-                  className="self-end"
+                <img
+                  src="/invoice/bar.png"
+                  alt=""
+                  className=" w-2/3 self-end"
                 />
               </div>
-              <div className="px-4 sm:px-8 h-auto font-mono">
+              <div className="px-4 sm:px-10 font-mono">
                 <div>
-                  <div className="flex justify-between items-center pb-2 pt-1">
-                    <div className=" sm:pt-1 flex justify-center items-center">
-                      <div>
-                        <img id="bar_code" ref={inputRef} />
-                        <span id="invoiceNo" className="hidden">
-                          {order?.orderId}
-                        </span>
-                      </div>
+                  <div className="flex justify-between items-center pb-1 sm:pb-2 sm:pt-1">
+                    <div className="w-1/2">
+                      <img id="bar_code" className="w-full" ref={inputRef} />
+                      <span id="invoiceNo" className="hidden">
+                        {order?.orderId}
+                      </span>
                     </div>
-                    <div className="w-96 flex justify-end items-end text-end">
-                      <div className="text-lg sm:text-xl lg:text-2xl font-semibold flex-column gap-1 mt-2">
+
+                    <div className="w-full flex justify-end items-end text-end">
+                      <div className="text-xs sm:text-xl lg:text-2xl font-semibold flex-column gap-1 mt-2">
                         <p>
                           Date:{" "}
                           <span className="font-medium">
@@ -159,36 +174,35 @@ const OrderDetails = () => {
                     </div>
                   </div>
                   <div className="sm:mb-4">
-                    <h1 className="text-title text-xl md:text-2xl font-semibold border-b-2 pb-1">
+                    <h1 className="text-title text-md md:text-2xl font-semibold border-b sm:border-b-2 sm:pb-1">
                       Customer Details:
                     </h1>
-                    <div className="text-lg sm:text-xl md:text-2xl font-semibold flex-column gap-1 mt-2">
+                    <div className="text-sm sm:text-xl md:text-2xl font-semibold flex-column sm:gap-1 sm:mt-2">
                       <p className="text-title">
-                        Name :{" "}
-                        <span className="font-medium">{order?.name}</span>
+                        Name: <span className="font-medium">{order?.name}</span>
                       </p>
                       <p className="text-title">
-                        Phone :{" "}
+                        Phone:{" "}
                         <span className="font-medium">{order?.contact}</span>
                       </p>
                       <p className="text-title">
-                        Address :{" "}
+                        Address:{" "}
                         <span className="font-medium">{order?.address}</span>
                       </p>
                     </div>
                   </div>
                   <div>
-                    <h1 className="text-title text-lg sm:text-2xl md:text-3xl font-semibold border-b sm:border-b-2">
+                    <h1 className="text-title text-md sm:text-2xl md:text-3xl font-semibold border-b sm:border-b-2">
                       Order Details:
                     </h1>
-                    <table className="w-full whitespace-nowrap table-auto border">
-                      <thead className="text-base font-semibold tracking-wide text-left  uppercase bg-zinc-800 border-slate-800 border text-slate-50">
+                    <table className="w-full whitespace-nowrap table-auto border border-gray-100">
+                      <thead className="text-xs sm:text-base font-semibold tracking-wide text-left  uppercase bg-zinc-800 border-slate-800 border text-slate-50">
                         <tr>
-                          <th className="px-4 py-1 ">SL</th>
-                          <th className="px-4 py-1 ">Item</th>
-                          <th className="px-4 py-1 ">Quantity</th>
-                          <th className="px-4 py-1 ">Price</th>
-                          <th className="px-4 py-1 ">Total</th>
+                          <th className="px-2 sm:px-4 sm:py-1 ">SL</th>
+                          <th className="px-2 sm:px-4 sm:py-1 ">Item</th>
+                          <th className="px-2 sm:px-4 sm:py-1 ">QTY</th>
+                          <th className="px-2 sm:px-4 sm:py-1 ">Price</th>
+                          <th className="px-2 sm:px-4 sm:py-1 ">Total</th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-100 ">
@@ -197,30 +211,34 @@ const OrderDetails = () => {
                             order.items.map((item, i) => (
                               <tr
                                 className={`${
-                                  (i + 1) % 2 == 0 && "bg-sub"
+                                  (i + 1) % 2 == 0 && "bg-slate-200"
                                 } px-2`}
                               >
-                                <td className="px-4 py-1 font-bold">
-                                  <span className="text-base">{1 + i}</span>
+                                <td className="px-2 sm:px-4 sm:py-1 font-medium">
+                                  <span className="text-xs sm:text-base">
+                                    {1 + i}
+                                  </span>
                                 </td>
-                                <td className="px-4 py-1 font-medium">
-                                  <span className="text-base">p name</span>
+                                <td className="px-2 sm:px-4 sm:py-1 font-medium">
+                                  <span className="text-xs sm:text-base">
+                                    p name
+                                  </span>
                                 </td>
 
-                                <td className="px-10 py-1">
-                                  <span className="text-base font-semibold ">
+                                <td className="px-2 sm:px-4 sm:py-1">
+                                  <span className="text-xs sm:text-base font-semibold ">
                                     {/* {item.quantity}
                                 {item.unit} */}
                                     1kg
                                   </span>
                                 </td>
-                                <td className="px-4 py-1">
-                                  <span className="text-base font-semibold ">
+                                <td className="px-2 sm:px-4 sm:py-1">
+                                  <span className="text-xs sm:text-base font-semibold ">
                                     100/-
                                   </span>
                                 </td>
-                                <td className="px-4 py-1">
-                                  <span className="text-base font-semibold ">
+                                <td className="px-2 sm:px-4 sm:py-1">
+                                  <span className="text-xs sm:text-base font-semibold ">
                                     120/-
                                   </span>
                                 </td>
@@ -234,14 +252,14 @@ const OrderDetails = () => {
               </div>
             </div>
             <div className="absolute bottom-0 flex flex-col gap-5">
-              <div className="flex justify-between w-full px-5 sm:px-10">
+              <div className="flex justify-between px-4 text-xs sm:text-base sm:px-10">
                 <div className="text-slate-500">
-                  [<span className="text-base font-bold text-black">Note:</span>{" "}
+                  [<span className="font-bold text-black">Note:</span>{" "}
                   <span className="text-slate-500 font-semibold">
                     {order?.note}]
                   </span>
                 </div>
-                <div className="flex flex-col w-2/3 sm:w-1/2 border-t-2 text-sm sm:text-xl lg:text-2xl">
+                <div className="flex flex-col w-1/2 border-t sm:border-t-2 text-xs sm:text-xl lg:text-2xl">
                   <div className="flex w-full px-4 justify-between">
                     <h1 className="font-mono font-medium">Sub-Total:</h1>
                     <h1 id="subTotal" className="text-title font-mono">
@@ -252,12 +270,12 @@ const OrderDetails = () => {
                     <h1 className="font-mono ">Delivery: </h1>
                     <h1
                       id="shipping_type"
-                      className="text-sm sm:text-lg md:text-xl text-title capitalize font-mono"
+                      className="text-title capitalize font-mono"
                     >
-                      {order?.deliveryType}
+                      ({order?.deliveryType})
                     </h1>
                     <h1 id="shipping_cost" className="text-title font-mono">
-                      150/-
+                      {order?.shippingCost}/-
                     </h1>
                   </div>
                   <div className="flex w-full px-4 justify-between">
@@ -282,7 +300,7 @@ const OrderDetails = () => {
               </div>
 
               <div>
-                <img src="/invoice/saba_bottom.png" alt="" />
+                <img src="/invoice/company_footer.png" alt="" />
               </div>
             </div>
           </div>

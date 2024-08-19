@@ -435,14 +435,14 @@ const OrderFrom = () => {
         <Button
           type="button"
           onClick={handleReset}
-          className="w-full !mt-6"
+          className="w-full !mt-6 bg-orange-500"
           disabled={isUpdate}
         >
           Reset
         </Button>
         <Button
           type="submit"
-          className="w-full !mt-6 cursor-pointer"
+          className="w-full !mt-6 cursor-pointer bg-green-500"
           disabled={loading}
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
