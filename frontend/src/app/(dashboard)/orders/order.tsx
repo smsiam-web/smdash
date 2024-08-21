@@ -30,6 +30,7 @@ import Link from "next/link";
 import { useState } from "react";
 import SummaryApi from "common";
 import { toast } from "react-toastify";
+import { TbListDetails } from "react-icons/tb";
 
 export function Orders({
   order,
@@ -159,7 +160,7 @@ export function Orders({
               </Link>
               <Link href={`/orders/id?${order?._id}`}>
                 <DropdownMenuItem className="cursor-pointer">
-                  <FaRegEdit />
+                <TbListDetails />
                   Details
                 </DropdownMenuItem>
               </Link>

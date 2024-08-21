@@ -22,19 +22,20 @@ import Link from "next/link";
 import SummaryApi from "common";
 
 const Orders = () => {
-  const [allOrder,setAllOrder] = useState([])
   const [salesCounter,setSalesCounter] = useState({
-    thisMonthSales: "00.00",
-    todaySales: "00.00",
-    totalSales: "00.00",
-    yesterdaySales: "00.00"
+    todaySales: "00",
+    todayPaid: "00",
+    todayCod: "00",
+    thisMonthSales: "00",
+    thisMonthPaid: "00",
+    thisMonthCod: "00",
+    yesterdaySales: "00",
+    yesterdayPaid: "00",
+    yesterdayCod: "00",
+    totalSales: "00",
+    totalPaid: "00",
+    totalCod: "00",
   })
-  //fetch Order
-  // const fetchAllOrder = async() =>{
-  //   const response = await fetch(SummaryApi.allOrder.url)
-  //   const dataResponse = await response.json()
-  //   setAllOrder(dataResponse?.data || [])
-  // }
 
   //fetch Sales Counter
   const fetchSalesCounter = async() =>{
@@ -42,14 +43,20 @@ const Orders = () => {
     const dataResponse = await response.json()
 
     setSalesCounter(dataResponse?.data || {
-      thisMonthSales: "00.00",
-      todaySales: "00.00",
-      totalSales: "00.00",
-      yesterdaySales: "00.00"
+      todaySales: "00",
+      todayPaid: "00",
+      todayCod: "00",
+      thisMonthSales: "00",
+      thisMonthPaid: "00",
+      thisMonthCod: "00",
+      yesterdaySales: "00",
+      yesterdayPaid: "00",
+      yesterdayCod: "00",
+      totalSales: "00",
+      totalPaid: "00",
+      totalCod: "00",
     })
   }
-
-  console.log(salesCounter)
 
   useEffect(()=>{
     // fetchAllOrder()

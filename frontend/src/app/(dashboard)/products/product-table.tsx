@@ -18,13 +18,12 @@ import {
   PaginationPrevious,
 } from "../../components/ui/pagination";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { Orders } from "./order";
+// import { Orders } from "./order";
 import SummaryApi from "common";
-import Image from "next/image";
-import { Box } from "lucide-react";
+import { Products } from "./product";
 
-export function OrdersTable() {
-  const [allOrder, setAllOrders] = useState([]);
+export function ProductTable() {
+  const [allproduct, setAllProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -32,31 +31,32 @@ export function OrdersTable() {
   let pathname = useSearchParams();
   let path = usePathname();
 
-  const fetchOrders = async (page: number) => {
+  const fetchProduct = async (page: number) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${SummaryApi.orders.url}?page=${page}&limit=10`
+        `${SummaryApi.products.url}?page=${page}&limit=10`
       );
       const data = await response.json();
       pathname.size !== 1 && setCurrentPage(data.currentPage);
-      setAllOrders(data.orders);
+      setAllProduct(data.products);
       setTotalPages(data.totalPages);
     } catch (error) {
-      // setError(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
+  console.log(allproduct);
 
   useEffect(() => {
     if (pathname.size === 1) {
       const p = (path + pathname).split("=")[1];
       const offset = Number(p);
-      fetchOrders(offset);
+      fetchProduct(offset);
       setCurrentPage(offset);
     } else {
-      fetchOrders(1);
+      fetchProduct(1);
     }
   }, [pathname]);
 
@@ -64,7 +64,7 @@ export function OrdersTable() {
     if (currentPage < totalPages) {
       const cpage = Number(currentPage);
       setCurrentPage(cpage + 1);
-      router.push(`/orders?page=${cpage + 1}`, { scroll: false });
+      router.push(`/products?page=${cpage + 1}`, { scroll: false });
     }
   };
 
@@ -87,65 +87,50 @@ export function OrdersTable() {
   const handelDirectPage = (i: number) => {
     setCurrentPage(i);
     if (i === 1) {
-      router.push(`/orders`, { scroll: false });
+      router.push(`/products`, { scroll: false });
     } else {
-      router.push(`/orders?page=${i}`, { scroll: false });
+      router.push(`/products?page=${i}`, { scroll: false });
     }
   };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
-      router.push(`/orders?page=${currentPage - 1}`, { scroll: false });
+      router.push(`/products?page=${currentPage - 1}`, { scroll: false });
       // router.back();
     }
     if (currentPage == 2) {
-      router.push(`/orders`, { scroll: false });
+      router.push(`/products`, { scroll: false });
     }
   };
-
-  console.log(!allOrder);
 
   return (
     <>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Created At</TableHead>
-            <TableHead>ID</TableHead>
-            <TableHead>Courier ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Contact</TableHead>
-            <TableHead>Shipping Type</TableHead>
-            <TableHead>Discount</TableHead>
-            <TableHead>Paid</TableHead>
-            <TableHead>COD</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className="hidden sm:table-cell"></TableHead>
+            <TableHead>SKU</TableHead>
+            <TableHead className="hidden sm:table-cell">Name</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead className="hidden sm:table-cell">Total Sell</TableHead>
+            <TableHead>Stock</TableHead>
+            <TableHead className="hidden sm:table-cell">Created At</TableHead>
+            <TableHead className="hidden sm:table-cell">Created By</TableHead>
             <TableHead>Actions</TableHead>
-            <TableHead>Created by</TableHead>
-            <TableHead>Invoice</TableHead>
-            <TableHead>Actions</TableHead>
+
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allOrder &&
-            allOrder?.map((order) => (
-              <Orders order={order} fetchOrders={fetchOrders} />
+          {allproduct &&
+            allproduct.map((product) => (
+              <Products product={product} fetchProduct={fetchProduct} />
             ))}
         </TableBody>
       </Table>
-      {!allOrder && (
-        <Image
-          src={"/asset/empty_cart.gif"}
-          width={600}
-          height={600}
-          alt="Empty"
-          className="mx-auto"
-        ></Image>
-      )}
 
       <Pagination className="mt-3">
         <PaginationContent>

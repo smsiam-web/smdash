@@ -19,6 +19,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "scontent.fjsr1-2.fna.fbcdn.net",
       },
+      {
+        protocol: "http",
+        hostname: "res.cloudinary.com",
+      },
     ],
   },
   reactStrictMode: true,

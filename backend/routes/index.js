@@ -28,6 +28,7 @@ const getOrderController = require("../controller/order/getOrder");
 const salesCounterDetailsController = require("../controller/utils/getSalesCounter");
 const orderController = require("../helpers/orderPagination");
 const getSingleOrder = require("../controller/order/getSingleOrder");
+const productController = require("../helpers/productPagination");
 
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
@@ -53,6 +54,7 @@ router.get("/get-categoryProduct", getCategoryProduct);
 router.post("/category-product", getCategoryWiseProduct);
 router.post("/product-details", getProductDetails);
 router.get("/search", searchProduct);
+router.get("/products", productController);
 router.post("/filter-product", filterProductController);
 
 //user add to cart

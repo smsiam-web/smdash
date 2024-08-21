@@ -47,7 +47,7 @@ const OrderCard = ({sales} : {sales: any} ) => {
       <Card>
         <CardHeader className="flex items-center">
           <LuLayers className="h-12 w-12 text-green-400" />
-          <h1>Today Orders</h1>
+          <h1>Today Sales</h1>
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl flex items-center">
             {formatCurrencyLocale(sales?.todaySales)}
           </CardTitle>
@@ -60,7 +60,7 @@ const OrderCard = ({sales} : {sales: any} ) => {
       <Card>
         <CardHeader className="flex items-center">
           <LuLayers className="h-12 w-12 text-orange-400" />
-          <h1>Yesterday Orders</h1>
+          <h1>Yesterday Sales</h1>
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl flex items-center">
             {formatCurrencyLocale(sales?.yesterdaySales)}
           </CardTitle>

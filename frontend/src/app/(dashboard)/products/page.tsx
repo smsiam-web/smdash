@@ -16,9 +16,8 @@ import {
 } from "../../components/ui/card";
 import { File, PlusCircle } from "lucide-react";
 import { Button } from "../../components/ui/button";
-import { ProductsTable } from "../products-table";
-import { PRODUCTS } from "../../components/config";
 import Link from "next/link";
+import { ProductTable } from "./product-table";
 
 
 const Products = () => {
@@ -58,11 +57,12 @@ const Products = () => {
             </div>
           </div>
           <TabsContent value="all">
-            <ProductsTable products={PRODUCTS} offset={0} totalProducts={10} />
+            <ProductTable />
           </TabsContent>
         </Tabs>
       </CardContent>
-      <CardFooter></CardFooter>
+      <CardFooter>
+      </CardFooter>
     </Card>
   );
 };

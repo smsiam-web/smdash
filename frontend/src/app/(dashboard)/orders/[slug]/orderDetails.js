@@ -15,6 +15,7 @@ import Image from "next/image";
 import { Box } from "@radix-ui/themes";
 import { AiOutlinePrinter } from "react-icons/ai";
 import { MdAddCircleOutline } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
 const GenerateInvoice = dynamic(
   () => import("../../../utils/GenerateInvoice"),
   {
@@ -116,6 +117,14 @@ const OrderDetails = () => {
             )}
           />
         </Box>
+        <Box>
+          <Link href={`/orders/edit/id?${order?._id}`}>
+            <Button className="gap-1 sm:gap-2">
+              <FaRegEdit />
+              Edit
+            </Button>
+          </Link>
+        </Box>
         {/* <GenerateStick html={ref} /> */}
       </div>
       <AspectRatio ratio={1 / 1.414} ref={ref} className="bg-white border">
@@ -127,7 +136,7 @@ const OrderDetails = () => {
                 <img
                   src="/invoice/company_header.png"
                   alt=""
-                  className="w-3/5 pl-2 pt-2 sm:pl-8 sm:pt-4 sm:pb-2"
+                  className="w-3/5 pl-2 pt-2 sm:pl-8 sm:pt-6 sm:pb-2"
                 />
                 <img
                   src="/invoice/bar.png"
@@ -210,36 +219,37 @@ const OrderDetails = () => {
                           {order &&
                             order.items.map((item, i) => (
                               <tr
+                                key={item?.sku}
                                 className={`${
                                   (i + 1) % 2 == 0 && "bg-slate-200"
                                 } px-2`}
                               >
                                 <td className="px-2 sm:px-4 sm:py-1 font-medium">
                                   <span className="text-xs sm:text-base">
+                                    {i < 9 && "0"}
                                     {1 + i}
                                   </span>
                                 </td>
                                 <td className="px-2 sm:px-4 sm:py-1 font-medium">
                                   <span className="text-xs sm:text-base">
-                                    p name
+                                    {item?.productName}
                                   </span>
                                 </td>
 
                                 <td className="px-2 sm:px-4 sm:py-1">
                                   <span className="text-xs sm:text-base font-semibold ">
-                                    {/* {item.quantity}
-                                {item.unit} */}
-                                    1kg
+                                    {item.quantity}
+                                    {item.unit}
                                   </span>
                                 </td>
                                 <td className="px-2 sm:px-4 sm:py-1">
                                   <span className="text-xs sm:text-base font-semibold ">
-                                    100/-
+                                    {item?.sellingPrice}/-
                                   </span>
                                 </td>
                                 <td className="px-2 sm:px-4 sm:py-1">
                                   <span className="text-xs sm:text-base font-semibold ">
-                                    120/-
+                                    {item?.totalAmount}/-
                                   </span>
                                 </td>
                               </tr>
@@ -281,7 +291,7 @@ const OrderDetails = () => {
                   <div className="flex w-full px-4 justify-between">
                     <h1 className="font-mono ">Discount: </h1>
                     <h1 id="discount" className="text-title font-mono">
-                      -{order?.discount || "0"}/-
+                      {order?.discount || "0"}/-
                     </h1>
                   </div>
                   <div className="flex w-full px-4 justify-between">

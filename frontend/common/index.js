@@ -10,6 +10,10 @@ const SummaryApi = {
     url: `${backendDomin}/api/orders`,
     method: "get",
   },
+  products: {
+    url: `${backendDomin}/api/products`,
+    method: "get",
+  },
 
   //User
   signUP: {
