@@ -22,7 +22,10 @@ const GenerateInvoice = ({ html, invoiceNo }) => {
   };
   return (
     <div className="col-span-2 sm:col-span-1">
-      <Button onClick={generateImage} className="gap-1 sm:gap-2">
+      <Button
+        onClick={generateImage}
+        className="gap-1 sm:gap-2 w-full sm:w-fit"
+      >
         <HiOutlineDocumentDownload /> Download
       </Button>
     </div>

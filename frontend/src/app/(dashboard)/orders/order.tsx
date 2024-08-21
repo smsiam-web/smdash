@@ -31,6 +31,7 @@ import { useState } from "react";
 import SummaryApi from "common";
 import { toast } from "react-toastify";
 import { TbListDetails } from "react-icons/tb";
+import CopyText from "src/app/utils/CopyText";
 
 export function Orders({
   order,
@@ -83,7 +84,7 @@ export function Orders({
     <>
       <TableRow>
         <TableCell>{moment(order?.createdAt).format("MMM D, YYYY")}</TableCell>
-        <TableCell className="font-medium">#{order?.orderId}</TableCell>
+        <TableCell className="font-medium "><CopyText className="cursor-pointer" text={`${order?.orderId}`} /></TableCell>
         <TableCell className="hidden sm:table-cell">{order?.courier}</TableCell>
         <TableCell>{order?.name}</TableCell>
         <TableCell>{order?.contact}</TableCell>
@@ -91,7 +92,7 @@ export function Orders({
           <Badge className="uppercase">{order?.deliveryType}</Badge>
         </TableCell>
         <TableCell className="hidden md:table-cell">
-          -{formatCurrencyLocale(200)}
+          {formatCurrencyLocale(order?.discount)}
         </TableCell>
         <TableCell className="hidden md:table-cell">
           {formatCurrencyLocale(order?.paidAmount)}
@@ -130,9 +131,11 @@ export function Orders({
 
         <TableCell>{order?.createdBy}</TableCell>
         <TableCell>
-          <div className="flex items-center justify-center cursor-pointer">
-            <RiFileDownloadLine />
-          </div>
+          <Link href={`/orders/id?${order?._id}`}>
+            <div className="flex items-center justify-center cursor-pointer">
+              <RiFileDownloadLine />
+            </div>
+          </Link>
         </TableCell>
         <TableCell>
           <DropdownMenu>
@@ -160,7 +163,7 @@ export function Orders({
               </Link>
               <Link href={`/orders/id?${order?._id}`}>
                 <DropdownMenuItem className="cursor-pointer">
-                <TbListDetails />
+                  <TbListDetails />
                   Details
                 </DropdownMenuItem>
               </Link>

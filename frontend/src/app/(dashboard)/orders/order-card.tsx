@@ -51,7 +51,7 @@ const OrderCard = ({sales} : {sales: any} ) => {
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl flex items-center">
             {formatCurrencyLocale(sales?.todaySales)}
           </CardTitle>
-          <CardDescription className="font-normal">
+          <CardDescription className="font-normal text-xs">
             <span>Paid : {formatCurrencyLocale(sales?.todayPaid)}  </span>
             <span>COD : {formatCurrencyLocale(sales?.todayCod)}</span>            
           </CardDescription>
@@ -64,7 +64,7 @@ const OrderCard = ({sales} : {sales: any} ) => {
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl flex items-center">
             {formatCurrencyLocale(sales?.yesterdaySales)}
           </CardTitle>
-          <CardDescription className="font-normal">
+          <CardDescription className="font-normal text-xs">
             <span>Paid : {formatCurrencyLocale(sales?.yesterdayPaid)}  </span>
             <span>COD : {formatCurrencyLocale(sales?.yesterdayCod)}</span>            
           </CardDescription>
@@ -78,7 +78,7 @@ const OrderCard = ({sales} : {sales: any} ) => {
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl">
           {formatCurrencyLocale(sales?.thisMonthSales)}
           </CardTitle>
-          <CardDescription className="font-normal">
+          <CardDescription className="font-normal text-xs">
             <span>Paid : {formatCurrencyLocale(sales?.thisMonthPaid)}  </span>
             <span>COD : {formatCurrencyLocale(sales?.thisMonthCod)}</span>            
           </CardDescription>
@@ -91,7 +91,7 @@ const OrderCard = ({sales} : {sales: any} ) => {
           <CardTitle className="scroll-m-20 text-2xl sm:text-3xl font-extrabold tracking-tight lg:text-4xl">
           {formatCurrencyLocale(sales?.totalSales)}
           </CardTitle>
-          <CardDescription className="font-normal">
+          <CardDescription className="font-normal text-xs">
             <span>Paid : {formatCurrencyLocale(sales?.totalPaid)}  </span>
             <span>COD : {formatCurrencyLocale(sales?.totalCod)}</span>            
           </CardDescription>

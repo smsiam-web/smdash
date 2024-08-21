@@ -13,6 +13,15 @@ const salesCounterSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  todayDis: {
+    type: Number,
+    default: 0,
+  },
+  todayShip: {
+    type: Number,
+    default: 0,
+  },
+
   thisMonthSales: {
     type: Number,
     default: 0,
@@ -25,6 +34,15 @@ const salesCounterSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  thisMonthDis: {
+    type: Number,
+    default: 0,
+  },
+  thisMonthShip: {
+    type: Number,
+    default: 0,
+  },
+
   yesterdaySales: {
     type: Number,
     default: 0,
@@ -37,6 +55,15 @@ const salesCounterSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  yesterdayDis: {
+    type: Number,
+    default: 0,
+  },
+  yesterdayShip: {
+    type: Number,
+    default: 0,
+  },
+
   totalSales: {
     type: Number,
     default: 0,
@@ -46,6 +73,14 @@ const salesCounterSchema = new mongoose.Schema({
     default: 0,
   },
   totalCod: {
+    type: Number,
+    default: 0,
+  },
+  totalDis: {
+    type: Number,
+    default: 0,
+  },
+  totalShip: {
     type: Number,
     default: 0,
   },

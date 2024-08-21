@@ -64,7 +64,7 @@ export default function DashboardLayout({
                 <ModeToggle />
                 <User />
               </header>
-              <main className="p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
+              <main className="sm:p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
                 {!!children ? children : <MyApp />}
               </main>
             </div>

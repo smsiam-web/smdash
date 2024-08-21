@@ -55,7 +55,7 @@ const OrderDetails = () => {
     value: order?.orderId || null,
     options: {
       background: "#C1DEC6",
-      displayValue: true,
+      // displayValue: true,
       width: 4,
       height: 90,
       fontSize: 30,
@@ -89,10 +89,10 @@ const OrderDetails = () => {
 
   return (
     <>
-      <div className="flex gap-2 justify-end pb-4 pr-5">
+      <div className="flex gap-2 justify-end pb-4 sm:pr-5">
         <Box>
           <Link href={"/orders/place-order"}>
-            <Button className="gap-1 sm:gap-2">
+            <Button className="gap-1 sm:gap-2 w-full sm:w-fit">
               <MdAddCircleOutline />
               Place order
             </Button>
@@ -105,12 +105,12 @@ const OrderDetails = () => {
             onClick={() => jsxToPng(null)}
           />
         </Box>
-        <Box>
+        <Box className="hidden sm:block">
           <ReactToPrint
             bodyClass="print-agreement"
             content={() => ref.current}
             trigger={() => (
-              <Button className="gap-1 sm:gap2">
+              <Button className="gap-1 sm:gap2 w-full sm:w-fit">
                 <AiOutlinePrinter />
                 Print
               </Button>
@@ -119,7 +119,7 @@ const OrderDetails = () => {
         </Box>
         <Box>
           <Link href={`/orders/edit/id?${order?._id}`}>
-            <Button className="gap-1 sm:gap-2">
+            <Button className="gap-1 sm:gap-2 w-full sm:w-fit">
               <FaRegEdit />
               Edit
             </Button>

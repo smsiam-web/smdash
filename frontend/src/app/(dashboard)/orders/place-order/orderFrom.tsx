@@ -46,6 +46,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
+
 type Product = {
   _id: string;
   category: string;
@@ -258,6 +259,7 @@ const OrderFrom = () => {
       const dataApi = await dataResponse.json();
 
       if (dataApi.success) {
+    
         toast.success(dataApi?.message);
         form.reset();
         router.push(`/orders/id?${dataApi?.data?._id}`);
@@ -428,8 +430,6 @@ const OrderFrom = () => {
     console.log(disStr);
     form.setValue("discount", disStr);
   }, [cAmountNum, sCost]);
-
-  console.log(order);
 
   return (
     <>
