@@ -20,9 +20,12 @@ import OrderCard from "./order-card";
 import { OrdersTable } from "./order-table";
 import Link from "next/link";
 import SummaryApi from "common";
+import { useSelector } from "react-redux";
+import { selectStatusCount } from "src/app/redux/slices/statusSlice";
+
 
 const Orders = () => {
-  const [salesCounter,setSalesCounter] = useState({
+  const [salesCounter, setSalesCounter] = useState({
     todaySales: "00",
     todayPaid: "00",
     todayCod: "00",
@@ -35,33 +38,90 @@ const Orders = () => {
     totalSales: "00",
     totalPaid: "00",
     totalCod: "00",
-  })
+  });
+  const [allCount, setAllCount] = useState(0);
+  const [inReview, setInReview] = useState(0);
+  const [pending, setPending] = useState(0);
+  const [processing, setProcessing] = useState(0);
+  const [shipped, setShipped] = useState(0);
+  const [delivered, setDelivered] = useState(0);
+  const [canceled, setCanceled] = useState(0);
+  const [hold, setHold] = useState(0);
+  const [returnCount, setReturnCount] = useState(0);
+  const [fake, setFake] = useState(0);
+  const statusCount = useSelector(selectStatusCount);
 
+  useEffect(() => {
+    statusCount.map((e: any) => {
+      switch (e._id) {
+        case "all":
+          setAllCount(e?.count);
+          break;
+        case "in_review":
+          setInReview(e?.count);
+          break;
+        case "pending":
+          setPending(e?.count);
+          break;
+        case "processing":
+          setProcessing(e?.count);
+          break;
+        case "shipped":
+          setShipped(e?.count);
+          break;
+
+        case "delivered":
+          setDelivered(e?.count);
+          break;
+
+        case "hold":
+          setHold(e?.count);
+          break;
+
+        case "returned":
+          setReturnCount(e?.count);
+          break;
+
+        case "fake":
+          setFake(e?.count);
+          break;
+
+        case "canceled":
+          setCanceled(e?.count);
+          break;
+
+        default:
+          break;
+      }
+    });
+  }, [statusCount]);
   //fetch Sales Counter
-  const fetchSalesCounter = async() =>{
-    const response = await fetch(SummaryApi.salesCounter.url)
-    const dataResponse = await response.json()
+  const fetchSalesCounter = async () => {
+    const response = await fetch(SummaryApi.salesCounter.url);
+    const dataResponse = await response.json();
 
-    setSalesCounter(dataResponse?.data || {
-      todaySales: "00",
-      todayPaid: "00",
-      todayCod: "00",
-      thisMonthSales: "00",
-      thisMonthPaid: "00",
-      thisMonthCod: "00",
-      yesterdaySales: "00",
-      yesterdayPaid: "00",
-      yesterdayCod: "00",
-      totalSales: "00",
-      totalPaid: "00",
-      totalCod: "00",
-    })
-  }
+    setSalesCounter(
+      dataResponse?.data || {
+        todaySales: "00",
+        todayPaid: "00",
+        todayCod: "00",
+        thisMonthSales: "00",
+        thisMonthPaid: "00",
+        thisMonthCod: "00",
+        yesterdaySales: "00",
+        yesterdayPaid: "00",
+        yesterdayCod: "00",
+        totalSales: "00",
+        totalPaid: "00",
+        totalCod: "00",
+      }
+    );
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     // fetchAllOrder()
-    fetchSalesCounter()
-  },[])
+    fetchSalesCounter();
+  }, []);
 
   return (
     <Card>
@@ -84,15 +144,15 @@ const Orders = () => {
         <Tabs defaultValue="all">
           <div className="flex items-center">
             <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="in_review">in_review</TabsTrigger>
-              <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="processing">Processing</TabsTrigger>
+              <TabsTrigger value="all">All ({allCount})</TabsTrigger>
+              <TabsTrigger value="in_review">in_review ({inReview})</TabsTrigger>
+              <TabsTrigger value="pending">Pending ({pending})</TabsTrigger>
+              <TabsTrigger value="processing">Processing ({processing})</TabsTrigger>
               <TabsTrigger value="delivered" className="hidden sm:flex">
-                Delivered
+                Delivered ({delivered})
               </TabsTrigger>
               <TabsTrigger value="cancel" className="hidden sm:flex">
-                Cancel
+                Cancel ({canceled})
               </TabsTrigger>
             </TabsList>
             <div className="ml-auto flex items-center gap-2">
@@ -113,22 +173,22 @@ const Orders = () => {
             </div>
           </div>
           <TabsContent value="all">
-            <OrdersTable value="all"  />
+            <OrdersTable value="all" />
           </TabsContent>
           <TabsContent value="in_review">
-            <OrdersTable value="in_review"  />
+            <OrdersTable value="in_review" />
           </TabsContent>
           <TabsContent value="pending">
-            <OrdersTable value="pending"  />
+            <OrdersTable value="pending" />
           </TabsContent>
           <TabsContent value="processing">
-            <OrdersTable value="processing"  />
+            <OrdersTable value="processing" />
           </TabsContent>
           <TabsContent value="delivered">
-            <OrdersTable value="delivered"  />
+            <OrdersTable value="delivered" />
           </TabsContent>
           <TabsContent value="cancel">
-            <OrdersTable value="cancel"  />
+            <OrdersTable value="cancel" />
           </TabsContent>
         </Tabs>
       </CardContent>

@@ -32,6 +32,7 @@ import SummaryApi from "common";
 import { toast } from "react-toastify";
 import { TbListDetails } from "react-icons/tb";
 import CopyText from "src/app/utils/CopyText";
+import { Skeleton } from "../../components/ui/skeleton"
 
 export function Orders({
   order,
@@ -111,7 +112,7 @@ export function Orders({
           <Select
             onValueChange={handleSelectChange}
             onOpenChange={() => setOrder(order)}
-            defaultValue={order?.status}
+            value={order?.status}
           >
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Select status" />

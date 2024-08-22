@@ -20,16 +20,79 @@ import {
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Orders } from "./order";
 import SummaryApi from "common";
-import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { setStatusCount } from "src/app/redux/slices/statusSlice";
+import OrderSkeliton from "./orderSkeliton";
 
 export function OrdersTable(status: any) {
   const [allOrder, setAllOrders] = useState([]);
+  const [statusCount, setStatusCounts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [prevStatus, setPrevStatus] = useState("all");
+  const [curStatus, setCurStatus] = useState("");
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   let router = useRouter();
   let pathname = useSearchParams();
   let path = usePathname();
+
+  const setAllCount = async (data: any) => {
+    const array1 = [
+      {
+        _id: "all",
+        count: 0,
+      },
+      {
+        _id: "in_review",
+        count: 0,
+      },
+      {
+        _id: "pending",
+        count: 0,
+      },
+      {
+        _id: "processing",
+        count: 0,
+      },
+      {
+        _id: "shipped",
+        count: 0,
+      },
+      {
+        _id: "delivered",
+        count: 0,
+      },
+      {
+        _id: "hold",
+        count: 0,
+      },
+      {
+        _id: "returned",
+        count: 0,
+      },
+      {
+        _id: "fake",
+        count: 0,
+      },
+      {
+        _id: "canceled",
+        count: 0,
+      },
+    ];
+    const statusCount = data.allStatusWiseCount;
+    const allCount = {
+      _id: "all",
+      count: data.totalOrders,
+    };
+    const count = statusCount?.concat(allCount);
+
+    const mergedCount = array1.map((obj1) => {
+      const obj2 = count.find((obj: any) => obj._id === obj1._id);
+      return obj2 ? { ...obj1, count: obj2.count } : obj1;
+    });
+    dispatch(setStatusCount(mergedCount));
+  };
 
   //fetch All Order
   const fetchOrders = async (page: number) => {
@@ -41,8 +104,10 @@ export function OrdersTable(status: any) {
       );
       const data = await response.json();
       pathname.size !== 1 && setCurrentPage(data.currentPage);
+      setStatusCounts(data.allStatusWiseCount)
       setAllOrders(data.orders);
       setTotalPages(data.totalPages);
+      setAllCount(data);
     } catch (error) {
       // setError(error);
     } finally {
@@ -50,13 +115,22 @@ export function OrdersTable(status: any) {
     }
   };
   useEffect(() => {
-    if (pathname.size === 1) {
-      const p = (path + pathname).split("=")[1];
-      const offset = Number(p);
-      fetchOrders(offset);
-      setCurrentPage(offset);
-    } else {
+    if (status.value !== "all") return;
+    console.log(prevStatus, curStatus);
+    if (prevStatus !== curStatus) {
+      router.push(`/orders`, { scroll: false });
       fetchOrders(1);
+      setCurrentPage(1);
+      setPrevStatus(curStatus);
+    } else {
+      if (pathname.size === 1) {
+        const p = (path + pathname).split("=")[1];
+        const offset = Number(p);
+        fetchOrders(offset);
+        setCurrentPage(offset);
+      } else {
+        fetchOrders(1);
+      }
     }
   }, [pathname]);
 
@@ -73,6 +147,7 @@ export function OrdersTable(status: any) {
       pathname.size !== 1 && setCurrentPage(statusResponse.currentPage);
       setTotalPages(statusResponse.totalStatusPages);
       setAllOrders(statusResponse.orders);
+      setAllCount(statusResponse);
     } catch (error) {
       //setError(error)
     } finally {
@@ -80,18 +155,27 @@ export function OrdersTable(status: any) {
     }
   };
   useEffect(() => {
-    if (pathname.size === 1) {
-      const p = (path + pathname).split("=")[1];
-      const offset = Number(p);
-      searchOrder(offset);
-      setCurrentPage(offset);
-    } else {
+    if (status.value === "all") return;
+    if (prevStatus !== curStatus) {
+      router.push(`/orders`, { scroll: false });
       searchOrder(1);
+      setCurrentPage(1);
+      setPrevStatus(curStatus);
+    } else {
+      if (pathname.size === 1) {
+        const p = (path + pathname).split("=")[1];
+        const offset = Number(p);
+        searchOrder(offset);
+        setCurrentPage(offset);
+      } else {
+        searchOrder(1);
+      }
     }
-  }, [status]);
+  }, [curStatus, pathname]);
 
   const refresh = async () => {
-    searchOrder(currentPage);
+    await fetchOrders(currentPage);
+    await searchOrder(currentPage);
   };
 
   const handleNextPage = () => {
@@ -138,6 +222,12 @@ export function OrdersTable(status: any) {
     }
   };
 
+  console.log(statusCount)
+
+  useEffect(() => {
+    setCurStatus(status);
+  }, []);
+
   return (
     <>
       <Table>
@@ -163,22 +253,15 @@ export function OrdersTable(status: any) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allOrder &&
-            allOrder?.map((order) => (
-              <Orders order={order} refresh={refresh} />
-            ))}
+          {allOrder.length > 0
+            ? allOrder.map((order: any) => (
+                <Orders key={order._id} order={order} refresh={refresh} />
+              ))
+            : Array.from({ length: 10 }).map((_, index) => (
+                <OrderSkeliton key={index} />
+              ))}
         </TableBody>
       </Table>
-      {!allOrder && (
-        <Image
-          src={"/asset/empty_cart.gif"}
-          width={600}
-          height={600}
-          alt="Empty"
-          className="mx-auto"
-        ></Image>
-      )}
-
       <Pagination className="mt-3">
         <PaginationContent>
           <PaginationItem>

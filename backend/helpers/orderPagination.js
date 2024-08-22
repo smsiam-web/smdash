@@ -35,6 +35,7 @@ const orderController = async (req, res) => {
       orders,
       totalOrders,
       allStatusWiseCount,
+      totalStatusWiseOrders,
       totalPages: Math.ceil(totalOrders / limit),
       totalStatusPages: Math.ceil(totalStatusWiseOrders / limit),
       currentPage: page,
