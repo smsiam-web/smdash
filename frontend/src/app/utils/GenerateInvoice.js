@@ -5,13 +5,6 @@ import { Button } from "../components/ui/button";
 import { HiOutlineDocumentDownload } from "react-icons/hi";
 
 const GenerateInvoice = ({ html, invoiceNo }) => {
-  // let invoiceNo = doc.splitTextToSize(
-  //   document.getElementById("invoiceNo").innerText,
-  //   300
-  // );
-
-  console.log(invoiceNo);
-
   const generateImage = async () => {
     htmlToImage.toJpeg(html.current, { quality: 1 }).then(function (dataUrl) {
       var link = document.createElement("a");

@@ -85,12 +85,13 @@ const Orders = () => {
           <div className="flex items-center">
             <TabsList>
               <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="active">Pending</TabsTrigger>
-              <TabsTrigger value="draft">Processing</TabsTrigger>
-              <TabsTrigger value="archived" className="hidden sm:flex">
+              <TabsTrigger value="in_review">in_review</TabsTrigger>
+              <TabsTrigger value="pending">Pending</TabsTrigger>
+              <TabsTrigger value="processing">Processing</TabsTrigger>
+              <TabsTrigger value="delivered" className="hidden sm:flex">
                 Delivered
               </TabsTrigger>
-              <TabsTrigger value="archived" className="hidden sm:flex">
+              <TabsTrigger value="cancel" className="hidden sm:flex">
                 Cancel
               </TabsTrigger>
             </TabsList>
@@ -112,7 +113,22 @@ const Orders = () => {
             </div>
           </div>
           <TabsContent value="all">
-            <OrdersTable />
+            <OrdersTable value="all"  />
+          </TabsContent>
+          <TabsContent value="in_review">
+            <OrdersTable value="in_review"  />
+          </TabsContent>
+          <TabsContent value="pending">
+            <OrdersTable value="pending"  />
+          </TabsContent>
+          <TabsContent value="processing">
+            <OrdersTable value="processing"  />
+          </TabsContent>
+          <TabsContent value="delivered">
+            <OrdersTable value="delivered"  />
+          </TabsContent>
+          <TabsContent value="cancel">
+            <OrdersTable value="cancel"  />
           </TabsContent>
         </Tabs>
       </CardContent>

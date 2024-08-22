@@ -41,6 +41,20 @@ const SummaryApi = {
     method: "post",
   },
 
+  //Customer
+  createCustomer: {
+    url: `${backendDomin}/api/create-customer`,
+    method: "post",
+  },
+  searchCustomer: {
+    url: `${backendDomin}/api/search-customer`,
+    method: "get",
+  },
+  updateCustomer: {
+    url: `${backendDomin}/api/update-customer`,
+    method: "post",
+  },
+
   //Order
   uploadOrder: {
     url: `${backendDomin}/api/upload-order`,

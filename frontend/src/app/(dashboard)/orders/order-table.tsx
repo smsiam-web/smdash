@@ -21,9 +21,8 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Orders } from "./order";
 import SummaryApi from "common";
 import Image from "next/image";
-import { Box } from "lucide-react";
 
-export function OrdersTable() {
+export function OrdersTable(status: any) {
   const [allOrder, setAllOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -32,7 +31,9 @@ export function OrdersTable() {
   let pathname = useSearchParams();
   let path = usePathname();
 
+  //fetch All Order
   const fetchOrders = async (page: number) => {
+    if (status.value !== "all") return;
     setLoading(true);
     try {
       const response = await fetch(
@@ -48,7 +49,6 @@ export function OrdersTable() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     if (pathname.size === 1) {
       const p = (path + pathname).split("=")[1];
@@ -59,6 +59,40 @@ export function OrdersTable() {
       fetchOrders(1);
     }
   }, [pathname]);
+
+  //fetch order by status wise
+  const searchOrder = async (page: number) => {
+    if (status.value === "all") return; // Prevent fetching if search query is not available
+    // setAllOrders([]);
+    setLoading(true);
+    try {
+      const statusRes = await fetch(
+        `${SummaryApi.orders.url}?page=${page}&limit=10&q=${status.value}`
+      );
+      const statusResponse = await statusRes.json();
+      pathname.size !== 1 && setCurrentPage(statusResponse.currentPage);
+      setTotalPages(statusResponse.totalStatusPages);
+      setAllOrders(statusResponse.orders);
+    } catch (error) {
+      //setError(error)
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (pathname.size === 1) {
+      const p = (path + pathname).split("=")[1];
+      const offset = Number(p);
+      searchOrder(offset);
+      setCurrentPage(offset);
+    } else {
+      searchOrder(1);
+    }
+  }, [status]);
+
+  const refresh = async () => {
+    searchOrder(currentPage);
+  };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -104,8 +138,6 @@ export function OrdersTable() {
     }
   };
 
-  console.log(!allOrder);
-
   return (
     <>
       <Table>
@@ -133,7 +165,7 @@ export function OrdersTable() {
         <TableBody>
           {allOrder &&
             allOrder?.map((order) => (
-              <Orders order={order} fetchOrders={fetchOrders} />
+              <Orders order={order} refresh={refresh} />
             ))}
         </TableBody>
       </Table>
@@ -150,14 +182,14 @@ export function OrdersTable() {
       <Pagination className="mt-3">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious onClick={handlePreviousPage} />
+            <PaginationPrevious size="default" onClick={handlePreviousPage} />
           </PaginationItem>
           {elements}
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext onClick={handleNextPage} />
+            <PaginationNext size="default" onClick={handleNextPage} />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

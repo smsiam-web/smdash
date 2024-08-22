@@ -46,6 +46,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
+import CustomerCard from "./customerCard";
 
 type Product = {
   _id: string;
@@ -62,6 +63,17 @@ type Product = {
   quantity: string;
   totalAmount: number;
 };
+type Customer = {
+  _id: string;
+  address: string;
+  name: string;
+  orderReports: string[];
+  orders: string[];
+  phone: string;
+  totalCanceledOrders: number;
+  totalDeliveredOrders: number;
+  totalFakeOrders: number;
+}
 interface Items {
   _id: string;
   category: string;
@@ -129,7 +141,7 @@ const formSchema = z.object({
     .string({
       required_error: "Please select a courier to display.",
     })
-    .default("pending"),
+    .default("in_review"),
   note: z.string().default("Note"),
   createdBy: z
     .string()
@@ -150,6 +162,7 @@ const OrderFrom = () => {
   const [filterProduct, setFilterProduct] = useState<Product[]>([]);
   const [selectProduct, setSelectProduct] = useState<Product | null>(null); // Use null initially to indicate no selection
   const [product, setProduct] = useState<Items[]>([]);
+  const [customer, setCustomer] = useState<Customer[]>([]);
   const [query, setQuery] = useState(null);
   const [grandTotal, setGrandTotal] = useState(0);
   const [order, setOrder] = useState({
@@ -199,6 +212,15 @@ const OrderFrom = () => {
       setIsUpdate(true);
     }
   };
+  //fetch Customer
+  const searchCustomer = async (phone: string) => {
+    if (!phone) return; // Prevent fetching if search query is not available
+    setLoading(true);
+    const response = await fetch(`${SummaryApi.searchCustomer.url}?q=${phone}`);
+    const dataResponse = await response.json();
+    setCustomer(dataResponse.data);
+    setLoading(false);
+  };
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -215,11 +237,15 @@ const OrderFrom = () => {
       conditionAmount: "0",
       shippingCost: "110",
       courier: "SteadFast",
-      status: "pending",
+      status: "in_review",
       note: "Note",
       createdBy: `${user?.name}`,
     },
   });
+  const phone = form.watch("contact");
+  useEffect(() => {
+    searchCustomer(phone);
+  }, [phone.length === 11]);
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -259,10 +285,75 @@ const OrderFrom = () => {
       const dataApi = await dataResponse.json();
 
       if (dataApi.success) {
-    
+        const data = dataApi.data;
         toast.success(dataApi?.message);
         form.reset();
         router.push(`/orders/id?${dataApi?.data?._id}`);
+
+
+        if(!customer.length) {
+          const customerData = {
+            name: data?.name,
+            phone: data?.contact,
+            address: data?.address,
+            orders: [
+              {
+                orderId: data?._id,
+              },
+            ],
+          };
+  
+          const customerResponse = await fetch(SummaryApi.createCustomer.url, {
+            method: SummaryApi.createCustomer.method,
+            credentials: "include",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(customerData),
+          });
+          const customerApi = await customerResponse.json();
+  
+          if (customerApi.success) {
+            toast.success(customerApi?.message);
+          }
+          if (customerApi.error) {
+            toast.error(customerApi.message);
+          }
+        }else{
+          const order = customer[0].orders;
+          const newOrders = [
+            {
+              orderId: data?._id,
+            }
+          ]
+          const orders = [...order, ...newOrders]
+          const updateValue = {
+            name: data?.name,
+            phone: data?.contact,
+            address: data?.address,
+            orders: orders
+          }
+
+          const updateData = {...customer[0], ...updateValue }
+
+          const dataResponse = await fetch(SummaryApi.updateCustomer.url, {
+            method: SummaryApi.updateCustomer.method,
+            credentials: "include",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(updateData),
+          });
+          const customerUpdateApi = await dataResponse.json();
+    
+          if (customerUpdateApi.success) {
+            toast.success(customerUpdateApi.message);
+          }
+    
+          if (customerUpdateApi.error) {
+            toast.error(customerUpdateApi.message);
+          }
+        } 
       }
 
       if (dataApi.error) {
@@ -280,6 +371,7 @@ const OrderFrom = () => {
       setProduct([]);
       setSearchActive(true);
       setGrandTotal(0);
+      setCustomer([])
     }
   };
 
@@ -291,7 +383,9 @@ const OrderFrom = () => {
     setFilterProduct([]);
     if (!query) return; // Prevent fetching if search query is not available
     setLoading(true);
+    
     const response = await fetch(`${SummaryApi.searchProduct.url}?q=${query}`);
+
     const dataResponse = await response.json();
     setLoading(false);
 
@@ -427,9 +521,15 @@ const OrderFrom = () => {
     const total = cAmountNum + paidAmountNumber;
     const dis = total - tAmonutNum - sCost;
     const disStr = String(dis);
-    console.log(disStr);
     form.setValue("discount", disStr);
   }, [cAmountNum, sCost]);
+
+  useEffect(() => {
+    if(!customer.length) return
+    console.log(customer)
+    form.setValue("name", customer[0].name)
+    form.setValue("address", customer[0].address)
+  }, [customer]);
 
   return (
     <>
@@ -455,6 +555,7 @@ const OrderFrom = () => {
           </form>
         </AlertDialogContent>
       </AlertDialog>
+      {!!customer.length && <CustomerCard customer={customer} />}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
           <FormField
@@ -631,7 +732,9 @@ const OrderFrom = () => {
                   >
                     <span className="flex items-center gap-3 text-xs sm:text-sm">
                       <span>Title: </span>
-                      <span>{i.productName} ({i.sku})</span>
+                      <span>
+                        {i.productName} ({i.sku})
+                      </span>
                       <span>Unit:</span>
                       <span>
                         {i.slug}

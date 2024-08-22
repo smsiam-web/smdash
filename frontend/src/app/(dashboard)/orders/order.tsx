@@ -35,10 +35,10 @@ import CopyText from "src/app/utils/CopyText";
 
 export function Orders({
   order,
-  fetchOrders,
+  refresh,
 }: {
   order: any;
-  fetchOrders: any;
+  refresh: any;
 }) {
   const [singleOrder, setOrder] = useState({
     deliveryType: "",
@@ -72,13 +72,15 @@ export function Orders({
 
     if (dataApi.success) {
       toast.success(dataApi.message);
-      fetchOrders();
+      refresh();
     }
 
     if (dataApi.error) {
       toast.error(dataApi.message);
     }
   };
+
+  
 
   return (
     <>
@@ -117,13 +119,15 @@ export function Orders({
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Status</SelectLabel>
+                <SelectItem value="in_review">in_review</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="processing">Processing</SelectItem>
                 <SelectItem value="shipped">Shipped</SelectItem>
                 <SelectItem value="delivered">Delivered</SelectItem>
                 <SelectItem value="hold">Hold</SelectItem>
                 <SelectItem value="returned">Returned</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
+                <SelectItem value="fake">Fake</SelectItem>
+                <SelectItem value="canceled">Canceled</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

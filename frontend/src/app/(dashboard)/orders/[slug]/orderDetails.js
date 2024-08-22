@@ -62,8 +62,6 @@ const OrderDetails = () => {
     },
   });
 
-  console.log(order);
-
   //fetch Single Order by id
   const fetchOrderByID = async (path) => {
     setLoading(true);
