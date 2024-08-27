@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const userModel = require("../../models/userModel");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 async function userSignInController(req, res) {
   try {
@@ -20,8 +21,6 @@ async function userSignInController(req, res) {
     }
 
     const checkPassword = await bcrypt.compare(password, user.password);
-
-    console.log("checkPassoword", checkPassword);
 
     if (checkPassword) {
       const tokenData = {

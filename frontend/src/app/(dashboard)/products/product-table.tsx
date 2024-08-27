@@ -126,8 +126,8 @@ export function ProductTable() {
         </TableHeader>
         <TableBody>
           {allproduct &&
-            allproduct.map((product) => (
-              <Products product={product} fetchProduct={fetchProduct} />
+            allproduct.map((product: any) => (
+              <Products key={product?._id} product={product} fetchProduct={fetchProduct} />
             ))}
         </TableBody>
       </Table>

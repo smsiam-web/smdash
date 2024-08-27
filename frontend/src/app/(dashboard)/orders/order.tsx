@@ -102,7 +102,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
     console.log(status)
 
     if (dataResponse.success) {
-      const orders = [];
+      let orders: any[] = [];
       await dataResponse?.data[0]?.orders.map((i: any) => {
         if (i?.orderId === _id) {
           orders.push({ ...i, ...status });
