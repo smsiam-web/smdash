@@ -10,8 +10,6 @@ async function salesCounterDetailsController(req, res) {
       success: true,
       message: "SalesCounter details",
     });
-
-    console.log("salesCounter", salesCounter);
   } catch (err) {
     res.status(400).json({
       message: err.message || err,

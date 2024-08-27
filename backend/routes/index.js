@@ -26,12 +26,13 @@ const UploadOrderController = require("../controller/order/uploadOrder");
 const UpdateOrderController = require("../controller/order/updateOrder");
 const getOrderController = require("../controller/order/getOrder");
 const salesCounterDetailsController = require("../controller/utils/getSalesCounter");
-const orderController = require("../helpers/orderPagination");
+const orderController = require("../controller/order/orderPagination");
 const getSingleOrder = require("../controller/order/getSingleOrder");
-const productController = require("../helpers/productPagination");
+const productController = require("../controller/product/productPagination");
 const CreateCustomerController = require("../controller/customer/createCustomer");
 const searchCustomerController = require("../controller/customer/searchCustomer");
 const updateCustomerController = require("../controller/customer/updateCustomer");
+const getCustomerController = require("../controller/customer/customerPagination");
 
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
@@ -45,6 +46,7 @@ router.post("/update-user", authToken, updateUser);
 //Customer
 router.post("/create-customer", authToken, CreateCustomerController);
 router.get("/search-customer", searchCustomerController);
+router.get("/customers", getCustomerController);
 router.post("/update-customer", authToken, updateCustomerController);
 
 //order

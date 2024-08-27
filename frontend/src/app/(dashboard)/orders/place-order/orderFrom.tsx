@@ -290,12 +290,13 @@ const OrderFrom = () => {
         form.reset();
         router.push(`/orders/id?${dataApi?.data?._id}`);
 
-
+        // create new customer 
         if(!customer.length) {
           const customerData = {
             name: data?.name,
             phone: data?.contact,
             address: data?.address,
+            types: "new",
             orders: [
               {
                 orderId: data?._id,
@@ -320,6 +321,7 @@ const OrderFrom = () => {
             toast.error(customerApi.message);
           }
         }else{
+          // update customer 
           const order = customer[0].orders;
           const newOrders = [
             {
@@ -331,6 +333,7 @@ const OrderFrom = () => {
             name: data?.name,
             phone: data?.contact,
             address: data?.address,
+            types: orders.length > 2 ? "regular" : "new",
             orders: orders
           }
 
@@ -901,9 +904,6 @@ const OrderFrom = () => {
                     <SelectGroup>
                       <SelectLabel>Courier</SelectLabel>
                       <SelectItem value="SteadFast">SteadFast</SelectItem>
-                      <SelectItem value="Pathao">Pathao</SelectItem>
-                      <SelectItem value="RED-X">RED-X</SelectItem>
-                      <SelectItem value="Sundorbon">Sundorbon</SelectItem>
                       <SelectItem value="HUB">HUB</SelectItem>
                     </SelectGroup>
                   </SelectContent>

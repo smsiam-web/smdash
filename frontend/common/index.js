@@ -50,6 +50,10 @@ const SummaryApi = {
     url: `${backendDomin}/api/search-customer`,
     method: "get",
   },
+  customers: {
+    url: `${backendDomin}/api/customers`,
+    method: "get",
+  },
   updateCustomer: {
     url: `${backendDomin}/api/update-customer`,
     method: "post",

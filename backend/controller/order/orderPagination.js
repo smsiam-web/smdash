@@ -1,4 +1,4 @@
-const orderModel = require("../models/orderModel"); // Adjust path as needed
+const orderModel = require("../../models/orderModel"); // Adjust path as needed
 
 const orderController = async (req, res) => {
   const { page = 1, limit = 10, q } = req.query; // Default to page 1 and limit 10

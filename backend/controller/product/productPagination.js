@@ -1,4 +1,4 @@
-const productModel = require("../models/productModel"); // Adjust path as needed
+const productModel = require("../../models/productModel"); // Adjust path as needed
 
 const productController = async (req, res) => {
   const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10

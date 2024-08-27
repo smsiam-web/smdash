@@ -17,6 +17,7 @@ const customerSchema = new Schema(
     address: { type: String, required: true },
     phone: { type: String, required: true, unique: true },
     orders: [orderSchema],
+    types: String,
     totalDeliveredOrders: { type: Number, default: 0 },
     totalCanceledOrders: { type: Number, default: 0 },
     totalPendingOrders: { type: Number, default: 0 },

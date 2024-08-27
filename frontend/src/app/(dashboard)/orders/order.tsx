@@ -53,28 +53,28 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
   useEffect(() => {
     switch (order?.status) {
       case "pending":
-        setBadgeVarians("secondary")
+        setBadgeVarians("secondary");
         break;
       case "in_review":
         setBadgeVarians("secondary_orange");
         break;
       case "processing":
-         setBadgeVarians("secondary_cyan")
+        setBadgeVarians("secondary_cyan");
         break;
       case "shipped":
-         setBadgeVarians("secondary_indigo")
+        setBadgeVarians("secondary_indigo");
         break;
       case "delivered":
-        setBadgeVarians("secondary_green")
+        setBadgeVarians("secondary_green");
         break;
       case "hold":
-        setBadgeVarians("secondary_lime")
+        setBadgeVarians("secondary_lime");
         break;
       case "canceled":
         setBadgeVarians("secondary_red");
         break;
       default:
-        setBadgeVarians("secondary")  
+        setBadgeVarians("secondary");
     }
   }, [order]);
 
@@ -113,7 +113,19 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
         <TableCell>{order?.name}</TableCell>
         <TableCell>{order?.contact}</TableCell>
         <TableCell>
-          <Badge variant={`${order?.deliveryType === 'home' ? "default_violet" : `${order?.deliveryType === "point" ? "default" : "default_green" }`}`} className="uppercase">
+          <Badge
+            variant={
+              (order?.deliveryType === "home"
+                ? "default_violet"
+                : order?.deliveryType === "point"
+                ? "default"
+                : "default_green") as
+                | "default_violet"
+                | "default_green"
+                | "default"
+            }
+            className="uppercase"
+          >
             {order?.deliveryType}
           </Badge>
         </TableCell>
@@ -127,7 +139,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
           {formatCurrencyLocale(order?.conditionAmount)}
         </TableCell>
         <TableCell>
-          <Badge variant={badgeVariants} className="capitalize">
+          <Badge variant={(badgeVariants) as "secondary"} className="capitalize">
             {order?.status}
           </Badge>
         </TableCell>
