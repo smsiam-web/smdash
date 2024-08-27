@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import {
   TableHead,
@@ -17,6 +16,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../../components/ui/pagination";
+
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Orders } from "./order";
 import SummaryApi from "common";
@@ -221,8 +221,6 @@ export function OrdersTable(status: any) {
       router.push(`/orders`, { scroll: false });
     }
   };
-
-  console.log(statusCount)
 
   useEffect(() => {
     setCurStatus(status);

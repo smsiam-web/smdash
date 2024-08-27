@@ -141,7 +141,7 @@ const formSchema = z.object({
     .string({
       required_error: "Please select a courier to display.",
     })
-    .default("in_review"),
+    .default("pending"),
   note: z.string().default("Note"),
   createdBy: z
     .string()
@@ -237,7 +237,7 @@ const OrderFrom = () => {
       conditionAmount: "0",
       shippingCost: "110",
       courier: "SteadFast",
-      status: "in_review",
+      status: "pending",
       note: "Note",
       createdBy: `${user?.name}`,
     },

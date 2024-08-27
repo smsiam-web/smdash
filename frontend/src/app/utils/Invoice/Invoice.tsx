@@ -1,57 +1,20 @@
-"use client";
-import { Button } from "../../../components/ui/button";
-import dynamic from "next/dynamic";
-import ReactToPrint from "react-to-print";
-import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React from 'react'
 import { useBarcode } from "next-barcode";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import SummaryApi from "common";
-import { useSelector } from "react-redux";
-import { selectUser } from "src/app/redux/slices/userSlice";
-import { useSearchParams } from "next/navigation";
-import moment from "moment";
-import { Box } from "@radix-ui/themes";
-import { AiOutlinePrinter } from "react-icons/ai";
-import { MdAddCircleOutline } from "react-icons/md";
-import { FaRegEdit } from "react-icons/fa";
-const GenerateInvoice = dynamic(
-  () => import("../../../utils/GenerateInvoice"),
-  {
-    ssr: false,
-  }
-);
 
-const OrderDetails = () => {
-  const ref = useRef();
-  const [loading, setLoading] = useState(false);
-  const [order, setOrder] = useState({
-    orderId: "",
-    deliveryType: "home",
-    contact: "",
-    items: [],
-    name: "",
-    address: "",
-    totalAmount: "",
-    paidAmount: "",
-    discount: "",
-    conditionAmount: "",
-    shippingCost: "",
-    courier: "SteadFast",
-    status: "pending",
-    note: "Note",
-    createdBy: "",
-  });
+type InvoiceProps = {
+    id: string;
+    customerName: string;
+    amount: number;
+    date: string;
+  };
 
-  //get current user from redux
-  const user = useSelector(selectUser);
-  //get order _id from path...
-  const searchParams = useSearchParams();
-  const fullPath = searchParams.toString();
-  const path = fullPath.replace(/=/g, "");
-  //generate orderID barcode
+
+
+  const Invoice: React.FC<InvoiceProps> = ({ id, customerName, amount, date }) => {
+      //generate orderID barcode
   const { inputRef } = useBarcode({
-    value: order?.orderId || null,
+    value: id,
     options: {
       background: "#C1DEC6",
       // displayValue: true,
@@ -60,72 +23,9 @@ const OrderDetails = () => {
       fontSize: 30,
     },
   });
-
-  //fetch Single Order by id
-  const fetchOrderByID = async (path) => {
-    setLoading(true);
-    const response = await fetch(SummaryApi.singleOrder.url, {
-      method: SummaryApi.singleOrder.method,
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        orderId: path,
-      }),
-    });
-    setLoading(false);
-    const dataReponse = await response.json();
-    if (dataReponse.success) {
-      setOrder(dataReponse?.data);
-    }
-  };
-
-  useEffect(() => {
-    fetchOrderByID(path);
-  }, [path]);
-
   return (
-    <>
-      <div className="flex gap-2 justify-end pb-4 sm:pr-5">
-        <Box>
-          <Link href={"/orders/place-order"}>
-            <Button className="gap-1 sm:gap-2 w-full sm:w-fit">
-              <MdAddCircleOutline />
-              Place order
-            </Button>
-          </Link>
-        </Box>
-        <Box>
-          <GenerateInvoice
-            html={ref}
-            invoiceNo={order?.orderId}
-            onClick={() => jsxToPng(null)}
-          />
-        </Box>
-        <Box className="hidden sm:block">
-          <ReactToPrint
-            bodyClass="print-agreement"
-            content={() => ref.current}
-            trigger={() => (
-              <Button className="gap-1 sm:gap2 w-full sm:w-fit">
-                <AiOutlinePrinter />
-                Print
-              </Button>
-            )}
-          />
-        </Box>
-        <Box>
-          <Link href={`/orders/edit/id?${order?._id}`}>
-            <Button className="gap-1 sm:gap-2 w-full sm:w-fit">
-              <FaRegEdit />
-              Edit
-            </Button>
-          </Link>
-        </Box>
-        {/* <GenerateStick html={ref} /> */}
-      </div>
-      <AspectRatio ratio={1 / 1.414} ref={ref} className="bg-white border">
-        <div className="bg-white" ref={ref}>
+    <AspectRatio ratio={1 / 1.414} className="bg-white border">
+        <div className="bg-white">
           <div className="bg-white text-black">
             <div>
               {/* image  */}
@@ -147,7 +47,7 @@ const OrderDetails = () => {
                     <div className="w-1/2">
                       <img id="bar_code" className="w-full" ref={inputRef} />
                       <span id="invoiceNo" className="hidden">
-                        {order?.orderId}
+                        {id}
                       </span>
                     </div>
 
@@ -156,24 +56,27 @@ const OrderDetails = () => {
                         <p>
                           Date:{" "}
                           <span className="font-medium">
-                            {moment(order?.createdAt).format("llll")}
+                            date
+                            {/* {moment(order?.createdAt).format("llll")} */}
                           </span>
                         </p>
                         <p>
                           Received by:{" "}
                           <span className="font-medium" id="status">
-                            {order?.createdBy}
+                            admin
+                            {/* {order?.createdBy} */}
                           </span>
                         </p>
                         <p>
                           Status:{" "}
-                          <span className="font-bold">{order?.status}.</span>
+                          <span className="font-bold">status.</span>
                         </p>
 
                         <p>
                           Courier:{" "}
                           <span className="font-medium" id="status">
-                            {order?.courier}
+                            courier
+                            {/* {order?.courier} */}
                           </span>
                         </p>
                       </div>
@@ -185,15 +88,15 @@ const OrderDetails = () => {
                     </h1>
                     <div className="text-sm sm:text-xl md:text-2xl font-semibold flex-column sm:gap-1 sm:mt-2">
                       <p className="text-title">
-                        Name: <span className="font-medium">{order?.name}</span>
+                        Name: <span className="font-medium">c name</span>
                       </p>
                       <p className="text-title">
                         Phone:{" "}
-                        <span className="font-medium">{order?.contact}</span>
+                        <span className="font-medium">contact</span>
                       </p>
                       <p className="text-title">
                         Address:{" "}
-                        <span className="font-medium">{order?.address}</span>
+                        <span className="font-medium">address</span>
                       </p>
                     </div>
                   </div>
@@ -313,8 +216,7 @@ const OrderDetails = () => {
           </div>
         </div>
       </AspectRatio>
-    </>
-  );
-};
+  )
+}
 
-export default OrderDetails;
+export default Invoice

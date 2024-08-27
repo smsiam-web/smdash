@@ -145,8 +145,8 @@ const Orders = () => {
           <div className="flex items-center">
             <TabsList>
               <TabsTrigger value="all">All ({allCount})</TabsTrigger>
-              <TabsTrigger value="in_review">in_review ({inReview})</TabsTrigger>
               <TabsTrigger value="pending">Pending ({pending})</TabsTrigger>
+              <TabsTrigger value="in_review">in_review ({inReview})</TabsTrigger>
               <TabsTrigger value="processing">Processing ({processing})</TabsTrigger>
               <TabsTrigger value="delivered" className="hidden sm:flex">
                 Delivered ({delivered})

@@ -27,20 +27,13 @@ import { FaRegEdit } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import moment from "moment";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SummaryApi from "common";
 import { toast } from "react-toastify";
 import { TbListDetails } from "react-icons/tb";
 import CopyText from "src/app/utils/CopyText";
-import { Skeleton } from "../../components/ui/skeleton"
 
-export function Orders({
-  order,
-  refresh,
-}: {
-  order: any;
-  refresh: any;
-}) {
+export function Orders({ order, refresh }: { order: any; refresh: any }) {
   const [singleOrder, setOrder] = useState({
     deliveryType: "",
     contact: "",
@@ -56,6 +49,34 @@ export function Orders({
     note: "",
     createdBy: "",
   });
+  const [badgeVariants, setBadgeVarians] = useState("secondary");
+  useEffect(() => {
+    switch (order?.status) {
+      case "pending":
+        setBadgeVarians("secondary")
+        break;
+      case "in_review":
+        setBadgeVarians("secondary_orange");
+        break;
+      case "processing":
+         setBadgeVarians("secondary_cyan")
+        break;
+      case "shipped":
+         setBadgeVarians("secondary_indigo")
+        break;
+      case "delivered":
+        setBadgeVarians("secondary_green")
+        break;
+      case "hold":
+        setBadgeVarians("secondary_lime")
+        break;
+      case "canceled":
+        setBadgeVarians("secondary_red");
+        break;
+      default:
+        setBadgeVarians("secondary")  
+    }
+  }, [order]);
 
   //change Statue
   const handleSelectChange = async (value: string) => {
@@ -81,18 +102,20 @@ export function Orders({
     }
   };
 
-  
-
   return (
     <>
       <TableRow>
         <TableCell>{moment(order?.createdAt).format("MMM D, YYYY")}</TableCell>
-        <TableCell className="font-medium "><CopyText className="cursor-pointer" text={`${order?.orderId}`} /></TableCell>
+        <TableCell className="font-medium">
+          <CopyText className="cursor-pointer" text={`${order?.orderId}`} />
+        </TableCell>
         <TableCell className="hidden sm:table-cell">{order?.courier}</TableCell>
         <TableCell>{order?.name}</TableCell>
         <TableCell>{order?.contact}</TableCell>
         <TableCell>
-          <Badge className="uppercase">{order?.deliveryType}</Badge>
+          <Badge variant={`${order?.deliveryType === 'home' ? "default_violet" : `${order?.deliveryType === "point" ? "default" : "default_green" }`}`} className="uppercase">
+            {order?.deliveryType}
+          </Badge>
         </TableCell>
         <TableCell className="hidden md:table-cell">
           {formatCurrencyLocale(order?.discount)}
@@ -104,7 +127,7 @@ export function Orders({
           {formatCurrencyLocale(order?.conditionAmount)}
         </TableCell>
         <TableCell>
-          <Badge color="gray" variant="secondary" className="capitalize">
+          <Badge variant={badgeVariants} className="capitalize">
             {order?.status}
           </Badge>
         </TableCell>
@@ -120,8 +143,8 @@ export function Orders({
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Status</SelectLabel>
-                <SelectItem value="in_review">in_review</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="in_review">in_review</SelectItem>
                 <SelectItem value="processing">Processing</SelectItem>
                 <SelectItem value="shipped">Shipped</SelectItem>
                 <SelectItem value="delivered">Delivered</SelectItem>
