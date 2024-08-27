@@ -43,14 +43,16 @@ async function userSignInController(req, res) {
         expiresIn: "8h", // Adjust as needed
       });
 
-      const tokenOption = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      };
+      console.log("token", token);
+
       // const tokenOption = {
       //   httpOnly: true,
-      //   secure: true,
+      //   secure: process.env.NODE_ENV === "production", // Use secure cookies in production
       // };
+      const tokenOption = {
+        httpOnly: true,
+        secure: true,
+      };
 
       res.cookie("token", token, tokenOption).status(200).json({
         message: "Login successfully",
