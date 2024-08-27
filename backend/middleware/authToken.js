@@ -12,7 +12,7 @@ async function authToken(req, res, next) {
       });
     }
 
-    jwt.verify(token, "sakdfjansfjvnahfkasjfsnvakfkasdfh", (err, decoded) => {
+    jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
       if (err) {
         console.error("Token verification error:", err);
         return res.status(401).json({

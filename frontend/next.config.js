@@ -20,6 +20,10 @@ const nextConfig = {
         hostname: "scontent.fjsr1-2.fna.fbcdn.net",
       },
       {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
         protocol: "http",
         hostname: "res.cloudinary.com",
       },
