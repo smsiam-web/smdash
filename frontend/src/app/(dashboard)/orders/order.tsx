@@ -32,6 +32,20 @@ import SummaryApi from "common";
 import { toast } from "react-toastify";
 import { TbListDetails } from "react-icons/tb";
 import CopyText from "src/app/utils/CopyText";
+import { AnyNsRecord } from "dns";
+
+type Customer = {
+  _id: string;
+  address: string;
+  name: string;
+  orderReports: string[];
+  orders: string[];
+  phone: string;
+  types: string;
+  totalCanceledOrders: number;
+  totalDeliveredOrders: number;
+  totalFakeOrders: number;
+};
 
 export function Orders({ order, refresh }: { order: any; refresh: any }) {
   const [singleOrder, setOrder] = useState({
@@ -77,6 +91,50 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
         setBadgeVarians("secondary");
     }
   }, [order]);
+  const [customer, setCustomer] = useState<Customer[]>([]);
+
+  //fetch Customer
+  const searchCustomer = async (phone: string, _id: string, status: any) => {
+    if (!phone) return; // Prevent fetching if search query is not available
+    const response = await fetch(`${SummaryApi.searchCustomer.url}?q=${phone}`);
+    const dataResponse = await response.json();
+
+    console.log(status)
+
+    if (dataResponse.success) {
+      const orders = [];
+      await dataResponse?.data[0]?.orders.map((i: any) => {
+        if (i?.orderId === _id) {
+          orders.push({ ...i, ...status });
+        } else {
+          orders.push({ ...i });
+        }
+      });
+      const order = { orders: orders };
+      const data = { ...dataResponse.data[0], ...order };
+      console.log(data)
+
+      const updateCustomerRes = await fetch(SummaryApi.updateCustomer.url, {
+        method: SummaryApi.updateCustomer.method,
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const customerUpdateApi = await updateCustomerRes.json();
+
+      if (customerUpdateApi.success) {
+        // toast.success(customerUpdateApi.message);
+        console.log(customerUpdateApi?.data)
+        refresh();
+      }
+
+      if (customerUpdateApi.error) {
+        toast.error(customerUpdateApi.message);
+      }
+    }
+  };
 
   //change Statue
   const handleSelectChange = async (value: string) => {
@@ -93,8 +151,9 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
     const dataApi = await dataResponse.json();
 
     if (dataApi.success) {
+      searchCustomer(dataApi.data.contact, dataApi.data._id, status);
       toast.success(dataApi.message);
-      refresh();
+      // refresh();
     }
 
     if (dataApi.error) {
@@ -112,7 +171,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
         <TableCell className="hidden sm:table-cell">{order?.courier}</TableCell>
         <TableCell>{order?.name}</TableCell>
         <TableCell>{order?.contact}</TableCell>
-        <TableCell>
+        <TableCell className="text-center">
           <Badge
             variant={
               (order?.deliveryType === "home"
@@ -139,7 +198,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
           {formatCurrencyLocale(order?.conditionAmount)}
         </TableCell>
         <TableCell>
-          <Badge variant={(badgeVariants) as "secondary"} className="capitalize">
+          <Badge variant={badgeVariants as "secondary"} className="capitalize">
             {order?.status}
           </Badge>
         </TableCell>

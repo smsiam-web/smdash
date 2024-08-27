@@ -70,6 +70,7 @@ type Customer = {
   orderReports: string[];
   orders: string[];
   phone: string;
+  types: string;
   totalCanceledOrders: number;
   totalDeliveredOrders: number;
   totalFakeOrders: number;

@@ -236,14 +236,14 @@ export function OrdersTable(status: any) {
             <TableHead>Courier ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Contact</TableHead>
-            <TableHead>Shipping Type</TableHead>
+            <TableHead className="text-center">Shipping Type</TableHead>
             <TableHead>Discount</TableHead>
             <TableHead>Paid</TableHead>
             <TableHead>COD</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
             <TableHead>Created by</TableHead>
-            <TableHead>Invoice</TableHead>
+            <TableHead className="text-center">Invoice</TableHead>
             <TableHead>Actions</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
