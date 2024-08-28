@@ -4,6 +4,8 @@ async function authToken(req, res, next) {
   try {
     const token = req.cookies?.token;
 
+    console.log("authToken", token);
+
     if (!token) {
       return res.status(401).json({
         message: "Please Login...!",
