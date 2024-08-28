@@ -48,14 +48,15 @@ async function userSignInController(req, res) {
       //   secure: true,
       // };
 
-      const tokenOption = {
-        httpOnly: true,
-        secure: false, // true for production
-        sameSite: "Lax", // or "Lax", "None"
+      const tokenOptions = {
+        httpOnly: true,       // Prevents client-side JavaScript from accessing the cookie
+        secure: true,         // Ensures the cookie is sent only over HTTPS
+        sameSite: 'None',     // Allows the cookie to be sent across different origins
       };
+      
       console.log("Setting cookie with token:", token);
 
-      res.cookie("token", token, tokenOption).status(200).json({
+      res.cookie("token", token, tokenOptions).status(200).json({
         message: "Login successfully",
         data: token,
         success: true,

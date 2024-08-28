@@ -49,8 +49,6 @@ export function SignIn() {
     const dataApi = await dataResponse.json()
     const data = dataApi.data;
 
-    console.log(dataApi.data)
-
     if(data && !(data?.role === "ADMIN")){
       toast.error("Unauthorized user")
     }
