@@ -45,11 +45,13 @@ async function userSignInController(req, res) {
 
       // const tokenOption = {
       //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      //   secure: true,
       // };
+
       const tokenOption = {
-        httpsOnly: true,
-        secure: true,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // true for production
+        sameSite: "None", // or "Lax", "None"
       };
 
       res.cookie("token", token, tokenOption).status(200).json({
