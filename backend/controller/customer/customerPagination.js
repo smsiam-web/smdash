@@ -30,7 +30,6 @@ const getCustomerController = async (req, res) => {
         },
       },
     ]);
-    console.log(allTypeWiseCount);
 
     res.json({
       customers,

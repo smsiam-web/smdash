@@ -33,15 +33,25 @@ const CreateCustomerController = require("../controller/customer/createCustomer"
 const searchCustomerController = require("../controller/customer/searchCustomer");
 const updateCustomerController = require("../controller/customer/updateCustomer");
 const getCustomerController = require("../controller/customer/customerPagination");
+const getUserController = require("../controller/user/userPagination");
+const CreateSFCSController = require("../controller/courier/sfcs/createSfcs");
+const updateSFCSController = require("../controller/courier/sfcs/updateSfcs");
+const getSFCSController = require("../controller/courier/sfcs/getSfcs");
 
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
 router.get("/user-details", authToken, userDetailsController);
 router.get("/userLogout", userLogout);
 
-//admin panel
+//User
 router.get("/all-user", authToken, allUsers);
 router.post("/update-user", authToken, updateUser);
+router.get("/get-user", getUserController);
+
+//Courier
+router.post("/create-sfcs", authToken, CreateSFCSController);
+router.post("/update-sfcs", authToken, updateSFCSController);
+router.get("/get-sfcs", getSFCSController);
 
 //Customer
 router.post("/create-customer", authToken, CreateCustomerController);

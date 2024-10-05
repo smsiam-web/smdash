@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const orderSchema = new Schema({
   orderId: { type: String, required: true },
-  invoiceID: { type: String },
+  // invoiceID: { type: String, required: true },
   status: {
     type: String,
     default: "pending",
@@ -13,16 +13,16 @@ const orderSchema = new Schema({
 const reportSchema = new Schema({
   reportBy: { type: String, required: false },
   reportDetails: { type: String, required: false },
-  invoiceID: { type: String },
+  // invoiceID: { type: String, required: false },
   orderDate: { type: Date, default: Date.now },
 });
 
-const customerSchema = new Schema(
+const staffSchema = new Schema(
   {
     name: { type: String, required: true },
-    address: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     phone: { type: String, required: true, unique: true },
-    orders: { type: [orderSchema], default: [] },
+    orders: [orderSchema],
     report: { type: [reportSchema], default: [] },
     types: String,
     totalDeliveredOrders: { type: Number, default: 0 },
@@ -37,19 +37,19 @@ const customerSchema = new Schema(
   }
 );
 
-customerSchema.pre("save", async function (next) {
+staffSchema.pre("save", async function (next) {
   this.updateOrderCounters();
   next();
 });
 
-customerSchema.post("findOneAndUpdate", function (doc) {
+staffSchema.post("findOneAndUpdate", function (doc) {
   if (doc) {
-    doc.updateOrderCounters();
+    doc.updateStaffCounters();
     doc.save();
   }
 });
 
-customerSchema.methods.updateOrderCounters = function () {
+staffSchema.methods.updateStaffCounters = function () {
   this.totalDeliveredOrders = this.orders.filter(
     (order) => order.status === "delivered"
   ).length;
@@ -75,6 +75,6 @@ customerSchema.methods.updateOrderCounters = function () {
   ).length;
 };
 
-const customerModel = mongoose.model("customer", customerSchema);
+const staffModel = mongoose.model("stuff", staffSchema);
 
-module.exports = customerModel;
+module.exports = staffModel;

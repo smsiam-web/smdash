@@ -1,14 +1,14 @@
-const uploadOrderPermission = require("../../helpers/permission");
+const uploadCustomerPermission = require("../../helpers/permission");
 const customerModel = require("../../models/customerModel");
 
 async function updateCustomerController(req, res) {
   try {
     // Check for permission
-    if (!uploadOrderPermission(req.userId)) {
+    if (!uploadCustomerPermission(req.userId)) {
       throw new Error("Permission denied. Only admin can update.");
     }
 
-    const { _id, ...resBody } = req.body;
+    const { _id, orderId, ...resBody } = req.body;
 
     // Validate _id
     if (!_id) {

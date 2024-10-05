@@ -21,7 +21,7 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import SummaryApi from "common";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../redux/slices/userSlice";
 
@@ -40,27 +40,27 @@ export function SignIn() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const fetchUserDetails = async()=>{
-    const dataResponse = await fetch(SummaryApi.current_user.url,{
-      method : SummaryApi.current_user.method,
-      credentials : 'include'
-    })
+  const fetchUserDetails = async () => {
+    const dataResponse = await fetch(SummaryApi.current_user.url, {
+      method: SummaryApi.current_user.method,
+      credentials: "include",
+    });
 
-    const dataApi = await dataResponse.json()
+    const dataApi = await dataResponse.json();
     const data = dataApi.data;
 
-    if(data && !(data?.role === "ADMIN")){
-      toast.error("Unauthorized user")
+    if (data && !(data?.role === "ADMIN")) {
+      toast.error("Unauthorized user");
     }
 
-    if(dataApi.success){
-      dispatch(setUserDetails(data))
+    if (dataApi.success) {
+      dispatch(setUserDetails(data));
     }
-}
+  };
 
-useEffect(() => {
-  fetchUserDetails()
-}, []);
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -72,26 +72,39 @@ useEffect(() => {
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const dataResponse = await fetch(SummaryApi.signIn.url,{
-      method : SummaryApi.signIn.method,
-      credentials : 'include',
-      headers : {
-          "content-type" : "application/json"
-      },
-      body : JSON.stringify(values)
-  })
-
-  const dataApi = await dataResponse.json()
-
-  if(dataApi.success){
-      toast.success(dataApi.message)
-      router.push('/')
-      await fetchUserDetails()
-  }
-
-  if(dataApi.error){
-      toast.error(dataApi.message)
-  }
+    setLoading(true);
+    try {
+      const response = await fetch(SummaryApi.signIn.url, {
+        method: SummaryApi.signIn.method,
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+  
+      if (!response.ok) {
+        // Handle HTTP errors (non-2xx status codes)
+        throw new Error('Network response was not ok.');
+      }
+  
+      const dataApi = await response.json();
+  
+      if (dataApi.success) {
+        toast.success(dataApi.message);
+        router.push('/');
+        await fetchUserDetails();
+      } else {
+        // Handle API errors (e.g., dataApi.success is false)
+        toast.error(dataApi.message);
+      }
+    }catch (error) {
+      // Handle fetch errors or JSON parsing errors
+      toast.error('An error occurred: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  
   };
 
   return (

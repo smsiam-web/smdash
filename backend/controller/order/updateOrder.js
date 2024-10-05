@@ -7,7 +7,8 @@ async function updateOrderController(req, res) {
       throw new Error("Permission denied, Only admin can update");
     }
 
-    const { _id, ...resBody } = req.body;
+    const { _id, orderId, ...resBody } = req.body;
+    console.log(orderId);
 
     const updateOrder = await orderModel.findByIdAndUpdate(_id, resBody);
 

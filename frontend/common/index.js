@@ -16,6 +16,20 @@ const SummaryApi = {
     method: "get",
   },
 
+  //Courier sfcs
+  createSFCS: {
+    url: `${backendDomin}/api/create-sfcs`,
+    method: "post",
+  },
+  updateSFCS: {
+    url: `${backendDomin}/api/update-sfcs`,
+    method: "post",
+  },
+  getSFCS: {
+    url: `${backendDomin}/api/get-sfcs`,
+    method: "get",
+  },
+
   //User
   signUP: {
     url: `${backendDomin}/api/signup`,
@@ -35,6 +49,10 @@ const SummaryApi = {
   },
   allUser: {
     url: `${backendDomin}/api/all-user`,
+    method: "get",
+  },
+  users: {
+    url: `${backendDomin}/api/get-user`,
     method: "get",
   },
   updateUser: {

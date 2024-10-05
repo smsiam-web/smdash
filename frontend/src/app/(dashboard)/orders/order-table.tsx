@@ -16,13 +16,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../../components/ui/pagination";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Orders } from "./order";
 import SummaryApi from "common";
 import { useDispatch } from "react-redux";
 import { setStatusCount } from "src/app/redux/slices/statusSlice";
-import OrderSkeliton from "./orderSkeliton";
+import OrderSkeleton from "./orderSkeliton";
 
 export function OrdersTable(status: any) {
   const [allOrder, setAllOrders] = useState([]);
@@ -104,7 +112,7 @@ export function OrdersTable(status: any) {
       );
       const data = await response.json();
       pathname.size !== 1 && setCurrentPage(data.currentPage);
-      setStatusCounts(data.allStatusWiseCount)
+      setStatusCounts(data.allStatusWiseCount);
       setAllOrders(data.orders);
       setTotalPages(data.totalPages);
       setAllCount(data);
@@ -226,21 +234,31 @@ export function OrdersTable(status: any) {
     setCurStatus(status);
   }, []);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false); // Switch to actual orders after timeout
+    }, 3000); // 2 seconds timeout
+
+    return () => clearTimeout(timeout); // Cleanup timeout on component unmount
+  }, []);
+
   return (
     <>
-      <Table>
+      <Table className="text-xs sm:text-base">
         <TableHeader>
           <TableRow>
             <TableHead>Created At</TableHead>
             <TableHead>ID</TableHead>
-            <TableHead>Courier ID</TableHead>
+            <TableHead className="hidden sm:table-cell">Courier ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Contact</TableHead>
-            <TableHead className="text-center">Shipping Type</TableHead>
-            <TableHead>Discount</TableHead>
-            <TableHead>Paid</TableHead>
+            <TableHead className="text-center hidden sm:table-cell">
+              Shipping Type
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">Discount</TableHead>
+            <TableHead className="hidden sm:table-cell">Paid</TableHead>
             <TableHead>COD</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className="hidden sm:table-cell">Status</TableHead>
             <TableHead>Actions</TableHead>
             <TableHead>Created by</TableHead>
             <TableHead className="text-center">Invoice</TableHead>
@@ -251,13 +269,23 @@ export function OrdersTable(status: any) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allOrder.length > 0
-            ? allOrder.map((order: any) => (
-                <Orders key={order._id} order={order} refresh={refresh} />
-              ))
-            : Array.from({ length: 10 }).map((_, index) => (
-                <OrderSkeliton key={index} />
-              ))}
+          {loading ? (
+            Array.from({ length: 10 }).map((_, index) => (
+              <OrderSkeleton key={index} />
+            ))
+          ) : allOrder.length > 0 ? (
+            allOrder.map((order: any) => (
+              <Orders key={order._id} order={order} refresh={refresh} />
+            ))
+          ) : (
+ 
+              <Card>
+                <CardHeader>
+                  <CardTitle>No orders found</CardTitle>
+                </CardHeader>
+              </Card>
+
+          )}
         </TableBody>
       </Table>
       <Pagination className="mt-3">

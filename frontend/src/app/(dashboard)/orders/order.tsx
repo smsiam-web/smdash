@@ -99,7 +99,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
     const response = await fetch(`${SummaryApi.searchCustomer.url}?q=${phone}`);
     const dataResponse = await response.json();
 
-    console.log(status)
+    console.log(status);
 
     if (dataResponse.success) {
       let orders: any[] = [];
@@ -112,7 +112,6 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
       });
       const order = { orders: orders };
       const data = { ...dataResponse.data[0], ...order };
-      console.log(data)
 
       const updateCustomerRes = await fetch(SummaryApi.updateCustomer.url, {
         method: SummaryApi.updateCustomer.method,
@@ -126,7 +125,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
 
       if (customerUpdateApi.success) {
         // toast.success(customerUpdateApi.message);
-        console.log(customerUpdateApi?.data)
+        console.log(customerUpdateApi?.data);
         refresh();
       }
 
@@ -163,7 +162,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
 
   return (
     <>
-      <TableRow>
+      <TableRow className="text-xs sm:text-base">
         <TableCell>{moment(order?.createdAt).format("MMM D, YYYY")}</TableCell>
         <TableCell className="font-medium">
           <CopyText className="cursor-pointer" text={`${order?.orderId}`} />
@@ -171,7 +170,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
         <TableCell className="hidden sm:table-cell">{order?.courier}</TableCell>
         <TableCell>{order?.name}</TableCell>
         <TableCell>{order?.contact}</TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center hidden sm:table-cell">
           <Badge
             variant={
               (order?.deliveryType === "home"
@@ -194,10 +193,8 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
         <TableCell className="hidden md:table-cell">
           {formatCurrencyLocale(order?.paidAmount)}
         </TableCell>
-        <TableCell className="hidden md:table-cell">
-          {formatCurrencyLocale(order?.conditionAmount)}
-        </TableCell>
-        <TableCell>
+        <TableCell>{formatCurrencyLocale(order?.conditionAmount)}</TableCell>
+        <TableCell className="hidden sm:table-cell">
           <Badge variant={badgeVariants as "secondary"} className="capitalize">
             {order?.status}
           </Badge>
@@ -208,7 +205,7 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
             onOpenChange={() => setOrder(order)}
             value={order?.status}
           >
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[100px] sm:w-[140px]">
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
             <SelectContent>
@@ -246,6 +243,13 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[150px]">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+              <Link href={`/orders/id?${order?._id}`}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <TbListDetails />
+                  Details
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
                 <AiOutlinePrinter />
                 Print invoice
@@ -258,12 +262,6 @@ export function Orders({ order, refresh }: { order: any; refresh: any }) {
                 <DropdownMenuItem className="cursor-pointer">
                   <FaRegEdit />
                   Edit
-                </DropdownMenuItem>
-              </Link>
-              <Link href={`/orders/id?${order?._id}`}>
-                <DropdownMenuItem className="cursor-pointer">
-                  <TbListDetails />
-                  Details
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuItem>

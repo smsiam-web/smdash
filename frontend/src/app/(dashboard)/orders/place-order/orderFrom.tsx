@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -74,7 +74,7 @@ type Customer = {
   totalCanceledOrders: number;
   totalDeliveredOrders: number;
   totalFakeOrders: number;
-}
+};
 interface Items {
   _id: string;
   category: string;
@@ -245,8 +245,17 @@ const OrderFrom = () => {
   });
   const phone = form.watch("contact");
   useEffect(() => {
-    searchCustomer(phone);
-  }, [phone.length === 11]);
+    if (phone.length < 11) {
+      setCustomer([]);
+    } else {
+      searchCustomer(phone);
+    }
+  }, [phone]);
+  useEffect(() => {
+    setCustomer([]);
+  }, [phone]);
+
+  console.log(phone.length, customer);
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -291,8 +300,8 @@ const OrderFrom = () => {
         form.reset();
         router.push(`/orders/id?${dataApi?.data?._id}`);
 
-        // create new customer 
-        if(!customer.length) {
+        // create new customer
+        if (!customer.length) {
           const customerData = {
             name: data?.name,
             phone: data?.contact,
@@ -301,10 +310,11 @@ const OrderFrom = () => {
             orders: [
               {
                 orderId: data?._id,
+                invoiceID: data?.orderId,
               },
             ],
           };
-  
+
           const customerResponse = await fetch(SummaryApi.createCustomer.url, {
             method: SummaryApi.createCustomer.method,
             credentials: "include",
@@ -314,31 +324,32 @@ const OrderFrom = () => {
             body: JSON.stringify(customerData),
           });
           const customerApi = await customerResponse.json();
-  
+
           if (customerApi.success) {
             toast.success(customerApi?.message);
           }
           if (customerApi.error) {
             toast.error(customerApi.message);
           }
-        }else{
-          // update customer 
+        } else {
+          // update customer
           const order = customer[0].orders;
           const newOrders = [
             {
               orderId: data?._id,
-            }
-          ]
-          const orders = [...order, ...newOrders]
+              invoiceID: data?.orderId,
+            },
+          ];
+          const orders = [...order, ...newOrders];
           const updateValue = {
             name: data?.name,
             phone: data?.contact,
             address: data?.address,
             types: orders.length > 2 ? "regular" : "new",
-            orders: orders
-          }
+            orders: orders,
+          };
 
-          const updateData = {...customer[0], ...updateValue }
+          const updateData = { ...customer[0], ...updateValue };
 
           const dataResponse = await fetch(SummaryApi.updateCustomer.url, {
             method: SummaryApi.updateCustomer.method,
@@ -349,15 +360,15 @@ const OrderFrom = () => {
             body: JSON.stringify(updateData),
           });
           const customerUpdateApi = await dataResponse.json();
-    
+
           if (customerUpdateApi.success) {
             toast.success(customerUpdateApi.message);
           }
-    
+
           if (customerUpdateApi.error) {
             toast.error(customerUpdateApi.message);
           }
-        } 
+        }
       }
 
       if (dataApi.error) {
@@ -375,7 +386,7 @@ const OrderFrom = () => {
       setProduct([]);
       setSearchActive(true);
       setGrandTotal(0);
-      setCustomer([])
+      setCustomer([]);
     }
   };
 
@@ -387,7 +398,7 @@ const OrderFrom = () => {
     setFilterProduct([]);
     if (!query) return; // Prevent fetching if search query is not available
     setLoading(true);
-    
+
     const response = await fetch(`${SummaryApi.searchProduct.url}?q=${query}`);
 
     const dataResponse = await response.json();
@@ -529,10 +540,9 @@ const OrderFrom = () => {
   }, [cAmountNum, sCost]);
 
   useEffect(() => {
-    if(!customer.length) return
-    console.log(customer)
-    form.setValue("name", customer[0].name)
-    form.setValue("address", customer[0].address)
+    if (!customer.length) return;
+    form.setValue("name", customer[0].name);
+    form.setValue("address", customer[0].address);
   }, [customer]);
 
   return (

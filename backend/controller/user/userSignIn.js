@@ -43,18 +43,16 @@ async function userSignInController(req, res) {
         expiresIn: "8h", // Adjust as needed
       });
 
-      // const tokenOption = {
-      //   httpOnly: true,
-      //   secure: true,
-      // };
-
       const tokenOptions = {
-        httpOnly: true,       // Prevents client-side JavaScript from accessing the cookie
-        secure: true,         // Ensures the cookie is sent only over HTTPS
-        sameSite: 'None',     // Allows the cookie to be sent across different origins
+        httpOnly: true,
+        secure: true,
       };
-      
-      console.log("Setting cookie with token:", token);
+
+      // const tokenOptions = {
+      //   httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+      //   secure: true, // Ensures the cookie is sent only over HTTPS
+      //   sameSite: "None", // Allows the cookie to be sent across different origins
+      // };
 
       res.cookie("token", token, tokenOptions).status(200).json({
         message: "Login successfully",

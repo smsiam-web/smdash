@@ -116,7 +116,7 @@ function DesktopNav() {
           <Ticket className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/our-stuff" label="Stuff">
+        <NavItem href="/our-staff" label="Staff">
           <User2Icon className="h-5 w-5" />
         </NavItem>
 
@@ -210,11 +210,11 @@ function MobileNav() {
             Support Ticket
           </Link>
           <Link
-            href="/our-stuff"
+            href="/our-staff"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <User2Icon className="h-5 w-5" />
-            Our Stuff
+            Our Staff
           </Link>
           <Link
             href="/settings"

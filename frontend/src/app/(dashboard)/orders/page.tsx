@@ -15,14 +15,13 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { File, PlusCircle } from "lucide-react";
+import { File, PlusCircle, Printer } from "lucide-react";
 import OrderCard from "./order-card";
 import { OrdersTable } from "./order-table";
 import Link from "next/link";
 import SummaryApi from "common";
 import { useSelector } from "react-redux";
 import { selectStatusCount } from "src/app/redux/slices/statusSlice";
-
 
 const Orders = () => {
   const [salesCounter, setSalesCounter] = useState({
@@ -144,14 +143,28 @@ const Orders = () => {
         <Tabs defaultValue="all">
           <div className="flex items-center">
             <TabsList>
-              <TabsTrigger value="all">All ({allCount})</TabsTrigger>
-              <TabsTrigger value="pending">Pending ({pending})</TabsTrigger>
-              <TabsTrigger value="in_review">in_review ({inReview})</TabsTrigger>
-              <TabsTrigger value="processing">Processing ({processing})</TabsTrigger>
-              <TabsTrigger value="delivered" className="hidden sm:flex">
+              <TabsTrigger className="text-xs sm:text-sm" value="all">
+                All ({allCount})
+              </TabsTrigger>
+              <TabsTrigger className="text-xs sm:text-sm" value="pending">
+                Pending ({pending})
+              </TabsTrigger>
+              <TabsTrigger className="text-xs sm:text-sm" value="in_review">
+                in_review ({inReview})
+              </TabsTrigger>
+              <TabsTrigger value="processing" className="hidden md:flex">
+                Processing ({processing})
+              </TabsTrigger>
+              <TabsTrigger value="shipped" className="hidden md:flex">
+              Shipped ({shipped})
+              </TabsTrigger>
+              <TabsTrigger value="delivered" className="hidden lg:flex">
                 Delivered ({delivered})
               </TabsTrigger>
-              <TabsTrigger value="cancel" className="hidden sm:flex">
+              <TabsTrigger value="hold" className="hidden xl:flex">
+                Hold ({hold})
+              </TabsTrigger>
+              <TabsTrigger value="cancel" className="hidden lg:flex">
                 Cancel ({canceled})
               </TabsTrigger>
             </TabsList>
@@ -162,6 +175,13 @@ const Orders = () => {
                   Export
                 </span>
               </Button>
+              <Button size="sm" className="h-8 gap-1 sm:flex hidden">
+                <Printer className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Bulk Print
+                </span>
+              </Button>
+
               <Link href={"/orders/place-order"}>
                 <Button size="sm" className="h-8 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
@@ -184,8 +204,14 @@ const Orders = () => {
           <TabsContent value="processing">
             <OrdersTable value="processing" />
           </TabsContent>
+          <TabsContent value="shipped">
+            <OrdersTable value="shipped" />
+          </TabsContent>
           <TabsContent value="delivered">
             <OrdersTable value="delivered" />
+          </TabsContent>
+          <TabsContent value="hold">
+            <OrdersTable value="hold" />
           </TabsContent>
           <TabsContent value="cancel">
             <OrdersTable value="cancel" />

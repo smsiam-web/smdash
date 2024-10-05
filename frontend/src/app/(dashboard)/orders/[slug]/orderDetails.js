@@ -138,7 +138,7 @@ const OrderDetails = () => {
                 <img
                   src="/invoice/bar.png"
                   alt=""
-                  className=" w-2/3 self-end"
+                  className=" w-2/3 self-end "
                 />
               </div>
               <div className="px-4 sm:px-10 font-mono">
