@@ -1,3 +1,4 @@
+// const backendDomin = "http://localhost:8080";
 const backendDomin = "https://smmerndash.onrender.com";
 
 const SummaryApi = {
@@ -70,6 +71,10 @@ const SummaryApi = {
   },
   customers: {
     url: `${backendDomin}/api/customers`,
+    method: "get",
+  },
+  singleCustomer: {
+    url: `${backendDomin}/api/single-customers`,
     method: "get",
   },
   updateCustomer: {

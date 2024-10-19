@@ -144,11 +144,11 @@ const ProductDetails = () => {
                       </div>
                       
                     ) : (
-                      <div className='flex gap-2 lg:flex-col overflow-scroll scrollbar-none h-full'>
+                      <div className='flex gap-2 lg:flex-col  scrollbar-none h-full'>
                         {
                           data?.productImage?.map((imgURL,index) =>{
                             return(
-                              <div className='h-20 w-20 bg-slate-200 rounded p-1' key={imgURL}>
+                              <div className='h-20 w-20 bg-slate-200 rounded p-1 shadow-md' key={imgURL}>
                                 <img src={imgURL} className='w-full h-full object-scale-down mix-blend-multiply cursor-pointer' onMouseEnter={()=>handleMouseEnterProduct(imgURL)}  onClick={()=>handleMouseEnterProduct(imgURL)}/>
                               </div>
                             )

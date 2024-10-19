@@ -66,6 +66,7 @@ const CustomerForm = () => {
 
   const fullPath = searchParams.toString();
   const path = fullPath.replace(/=/g, "");
+  console.log(path, customer)
 
   //fetch Customer
   const searchCustomer = async (phone: string) => {
@@ -81,6 +82,26 @@ const CustomerForm = () => {
     }
     setLoading(false);
   };
+    //fetch Single Order
+    const fetchCustomerByID = async (path: any) => {
+      setLoading(true);
+      const response = await fetch(SummaryApi.singleCustomer.url, {
+        method: SummaryApi.singleCustomer.method,
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          customerId: path,
+        }),
+      });
+      setLoading(false);
+      const dataReponse = await response.json();
+      if (dataReponse.success) {
+        form.reset(dataReponse?.data);
+        setCustomer(dataReponse?.data);
+        setIsUpdate(true);
+      }
+    };
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -169,6 +190,10 @@ const CustomerForm = () => {
       setIsUpdate(false);
     }
   };
+
+  // useEffect(() => {
+  //   fetchCustomerByID(path);
+  // }, [path]);
 
   useEffect(() => {
     if (!customer.length) return;

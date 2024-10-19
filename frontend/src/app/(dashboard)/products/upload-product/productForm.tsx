@@ -51,19 +51,16 @@ const formSchema = z.object({
   stock: z.string().min(1, {
     message: "product stock is a required field",
   }),
-  productImage: z
-    .array(z.string())
-    .optional(),
+  productImage: z.array(z.string()).optional(),
   price: z.string().min(0, {
     message: "product price is a required field",
   }),
   sellingPrice: z.string().min(0, {
     message: "product selling Price is a required field",
   }),
-  category: z
-    .string({
-      required_error: "Please select a category to display.",
-    }),
+  category: z.string({
+    required_error: "Please select a category to display.",
+  }),
   description: z.string().min(0, {
     message: "description is a required field",
   }),
@@ -97,13 +94,13 @@ const ProductForm = () => {
   //fetch Single Order
   const fetchProductByID = async (path: any) => {
     setLoading(true);
-    const response = await fetch(SummaryApi.singleOrder.url, {
-      method: SummaryApi.singleOrder.method,
+    const response = await fetch(SummaryApi.productDetails.url, {
+      method: SummaryApi.productDetails.method,
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        orderId: path,
+        productId: path,
       }),
     });
     setLoading(false);
@@ -156,14 +153,13 @@ const ProductForm = () => {
     },
   });
 
-  console.log(product)
-
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
+    console.log(product, product.productImage)
 
     if (isUpdate) {
-      const data = { ...product, ...values };
+      const data = { ...product, ...values, productImage: product.productImage };
       const dataResponse = await fetch(SummaryApi.updateProduct.url, {
         method: SummaryApi.updateProduct.method,
         credentials: "include",
@@ -177,14 +173,14 @@ const ProductForm = () => {
       if (dataApi.success) {
         toast.success(dataApi.message);
         form.reset();
-        fetchProductByID(path);
+        router.push(`/products/id?${dataApi?.data?._id}`);
       }
 
       if (dataApi.error) {
         toast.error(dataApi.message);
       }
     } else {
-      const productData ={...values, productImage: product?.productImage};
+      const productData = { ...values, productImage: product?.productImage };
       const dataResponse = await fetch(SummaryApi.uploadProduct.url, {
         method: SummaryApi.uploadProduct.method,
         credentials: "include",
@@ -207,7 +203,11 @@ const ProductForm = () => {
   };
 
   const handleReset = async () => {
-    form.reset(); // Resets the form fields to their default values
+    if (isUpdate) {
+      fetchProductByID(path);
+    } else {
+      form.reset(); // Resets the form fields to their default values
+    }
   };
 
   useEffect(() => {
@@ -340,50 +340,46 @@ const ProductForm = () => {
           )}
         </div>
         <FormField
-            control={form.control}
-            name="productImage"
-            render={({ field }) => (
-              <FormItem>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          control={form.control}
+          name="productImage"
+          render={({ field }) => (
+            <FormItem>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
-            control={form.control}
-            name="slug"
-            render={({ field }) => (
-              <FormItem>
-                <Label>Product Slug</Label>
-                <FormControl>
-                  <Input
-                    placeholder="Slug"
-                    className="hide-stepper"
-                    min="0"
-                    type="number"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          control={form.control}
+          name="slug"
+          render={({ field }) => (
+            <FormItem>
+              <Label>Product Slug</Label>
+              <FormControl>
+                <Input
+                  placeholder="Slug"
+                  className="hide-stepper"
+                  min="0"
+                  type="number"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
-            control={form.control}
-            name="unit"
-            render={({ field }) => (
-              <FormItem>
-                <Label>Unit</Label>
-                <FormControl>
-                  <Input
-                    placeholder="Unit"
-                    type="text"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          control={form.control}
+          name="unit"
+          render={({ field }) => (
+            <FormItem>
+              <Label>Unit</Label>
+              <FormControl>
+                <Input placeholder="Unit" type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="grid pb-3 grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-6">
           <FormField
@@ -448,8 +444,7 @@ const ProductForm = () => {
         <Button
           type="button"
           onClick={handleReset}
-          className="w-full !mt-6"
-          disabled={isUpdate}
+          className="w-full !mt-6 bg-orange-500 cursor-pointer"
         >
           Reset
         </Button>

@@ -37,6 +37,7 @@ const getUserController = require("../controller/user/userPagination");
 const CreateSFCSController = require("../controller/courier/sfcs/createSfcs");
 const updateSFCSController = require("../controller/courier/sfcs/updateSfcs");
 const getSFCSController = require("../controller/courier/sfcs/getSfcs");
+const getSingleCustomerController = require("../controller/customer/getCustomer");
 
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
@@ -57,6 +58,7 @@ router.get("/get-sfcs", getSFCSController);
 router.post("/create-customer", authToken, CreateCustomerController);
 router.get("/search-customer", searchCustomerController);
 router.get("/customers", getCustomerController);
+router.get("/single-customers", getSingleCustomerController);
 router.post("/update-customer", authToken, updateCustomerController);
 
 //order
